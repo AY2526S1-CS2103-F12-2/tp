@@ -36,7 +36,7 @@ public class RemarkCommandParserTest {
 
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemarkCommand.MESSAGE_USAGE);
 
-       // no parameters
+        // no parameters
         assertParseFailure(parser, RemarkCommand.COMMAND_WORD, expectedMessage);
 
         // no index
