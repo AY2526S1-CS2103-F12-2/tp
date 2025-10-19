@@ -16,6 +16,10 @@ import seedu.address.logic.util.ApplicationLinkResult;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
+/**
+ * Launches the specified application for a person identified by the index number
+ * used in the displayed person list.
+ */
 public class LaunchCommand extends Command {
 
     public static final String COMMAND_WORD = "launch";
@@ -43,6 +47,12 @@ public class LaunchCommand extends Command {
     private final Index index;
     private final ApplicationType type;
 
+    /**
+     * Creates a LaunchCommand to launch the specified application for the person at the given index.
+     *
+     * @param index The index of the person in the displayed person list.
+     * @param type  The type of application to launch.
+     */
     public LaunchCommand(Index index, ApplicationType type) {
         requireNonNull(index);
         requireNonNull(type);
@@ -66,6 +76,15 @@ public class LaunchCommand extends Command {
         return new CommandResult(result.getMessage());
     }
 
+    /**
+     * Launches the specified application link for the given person.
+     *
+     * @param person    The person whose application link is to be launched.
+     * @param type      The type of application to launch.
+     * @return The result of the application link launch.
+     * @throws CommandException If the person does not have the required information
+     *                          for the specified application type.
+     */
     private ApplicationLinkResult launchApplicationLink(Person person, ApplicationType type) throws CommandException {
         requireNonNull(person);
         requireNonNull(type);
@@ -104,6 +123,12 @@ public class LaunchCommand extends Command {
         return index.equals(otherCommand.index) && type == otherCommand.type;
     }
 
+    /**
+     * Registers the launch command with the command registry, providing detailed help information
+     * including usage syntax, parameters, and examples for user reference.
+     * This method is called during application initialization to make the command
+     * available in the help system.
+     */
     public static void registerHelp() {
         CommandRegistry.register(
                 COMMAND_WORD,

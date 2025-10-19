@@ -197,7 +197,7 @@ public class CommandRegistry {
      *
      * @param commandWord The command word to get help information for
      * @return A formatted {@code String} containing help information for the specified command,
-     * or an error message if the command is not registered
+     *      or an error message if the command is not registered
      */
     public static String getCommandHelp(String commandWord) {
         CommandInfo info = commands.get(commandWord);

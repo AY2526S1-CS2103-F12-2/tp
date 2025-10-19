@@ -2,14 +2,17 @@ package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.FLAG_EMAIL_LAUNCH;
-import static seedu.address.logic.parser.CliSyntax.FLAG_TELEGRAM_LAUNCH;
 import static seedu.address.logic.parser.CliSyntax.FLAG_GITHUB_LAUNCH;
+import static seedu.address.logic.parser.CliSyntax.FLAG_TELEGRAM_LAUNCH;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.logic.util.ApplicationLinkLauncher.ApplicationType;
 import seedu.address.logic.commands.LaunchCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.util.ApplicationLinkLauncher.ApplicationType;
 
+/**
+ * Parses input arguments and creates a new LaunchCommand object
+ */
 public class LaunchCommandParser implements Parser<LaunchCommand> {
 
     public static final String MESSAGE_USAGE = LaunchCommand.COMMAND_WORD + ": Launches the specified application "

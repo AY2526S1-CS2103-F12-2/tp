@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.LaunchCommand;
 
-;
-
 public class LaunchCommandParserTest {
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, LaunchCommand.MESSAGE_USAGE);
