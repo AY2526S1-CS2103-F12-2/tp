@@ -1,10 +1,7 @@
 package seedu.address.ui;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Comparator;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
@@ -12,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.logic.util.ApplicationLinkLauncher;
+import seedu.address.logic.util.ApplicationLinkResult;
 import seedu.address.model.person.Person;
 
 /**
@@ -21,9 +20,7 @@ public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
 
-    private static final String LAUNCH_EMAIL_PREFIX = "mailto:";
-    private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
-    private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
+    private final Consumer<String> feedbackConsumer;
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -43,28 +40,22 @@ public class PersonCard extends UiPart<Region> {
     private Label id;
     @FXML
     private Label phone;
-//    @FXML
-//    private Label email;
-//    @FXML
-//    private Label telegram;
-//    @FXML
-//    private Label github;
-    @FXML
-    private FlowPane tags;
-
     @FXML
     private Hyperlink email;
     @FXML
     private Hyperlink telegram;
     @FXML
     private Hyperlink github;
+    @FXML
+    private FlowPane tags;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
      */
-    public PersonCard(Person person, int displayedIndex) {
+    public PersonCard(Person person, int displayedIndex, Consumer<String> feedbackConsumer) {
         super(FXML);
         this.person = person;
+        this.feedbackConsumer = feedbackConsumer;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
@@ -108,34 +99,15 @@ public class PersonCard extends UiPart<Region> {
 
 
     public void launchEmail() {
-        launchApplicationLink(LAUNCH_EMAIL_PREFIX + person.getEmail().value);
+        feedbackConsumer.accept(ApplicationLinkLauncher.launchEmail(person.getEmail().value).getMessage());
     }
 
     public void launchTelegram() {
-        launchApplicationLink(LAUNCH_TELEGRAM_PREFIX + person.getTelegram().value);
+        feedbackConsumer.accept(ApplicationLinkLauncher.launchTelegram(person.getTelegram().value).getMessage());
     }
 
     public void launchGithub() {
-        launchApplicationLink(LAUNCH_GITHUB_PREFIX + person.getGithub().value);
-    }
-
-    public void launchApplicationLink(String link) {
-        try {
-            URI uri = parseToUri(link);
-            openLink(uri);
-            // Result Display SUCCESS
-        } catch (URISyntaxException | IOException e) {
-            System.out.println("FAHH");
-            // Result Display ERROR
-        }
-    }
-
-    public URI parseToUri(String link) throws URISyntaxException {
-        return new URI(link);
-    }
-
-    public void openLink(URI uri) throws IOException {
-        Desktop.getDesktop().browse(uri);
+        feedbackConsumer.accept(ApplicationLinkLauncher.launchGithub(person.getGithub().value).getMessage());
     }
 
 }
