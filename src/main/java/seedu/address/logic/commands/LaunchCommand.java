@@ -1,0 +1,103 @@
+package seedu.address.logic.commands;
+
+import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.FLAG_EMAIL_LAUNCH;
+import static seedu.address.logic.parser.CliSyntax.FLAG_GITHUB_LAUNCH;
+import static seedu.address.logic.parser.CliSyntax.FLAG_TELEGRAM_LAUNCH;
+
+import java.util.List;
+
+import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.util.ApplicationLinkLauncher;
+import seedu.address.logic.util.ApplicationLinkLauncher.ApplicationType;
+import seedu.address.logic.util.ApplicationLinkResult;
+import seedu.address.model.Model;
+import seedu.address.model.person.Person;
+
+public class LaunchCommand extends Command {
+
+    public static final String COMMAND_WORD = "launch";
+
+    private static final String MESSAGE_MISSING_EMAIL = "%s This person does not have an email address.";
+    private static final String MESSAGE_MISSING_TELEGRAM = "%s This person does not have a Telegram handle.";
+    private static final String MESSAGE_MISSING_GITHUB = "%s This person does not have a GitHub profile.";
+
+    private static final String MESSAGE_DESCRIPTION =
+            "Launches the specified application for a person in the address book";
+    private static final String MESSAGE_PARAMETERS = "Parameters: INDEX (must be a positive integer)"
+            + "[" + FLAG_EMAIL_LAUNCH + " (email) | "
+            + FLAG_TELEGRAM_LAUNCH + " (telegram) | "
+            + FLAG_GITHUB_LAUNCH + " (github)]"
+            + "\n\nNotes:\n"
+            + "  - INDEX must be a positive integer corresponding to a person in the displayed list.\n"
+            + "  - Exactly one application flag must be specified.\n"
+            + "  - Email launch application/browser must be configured on your system.\n"
+            + "  - Telegram and GitHub links will be launched in your default web browser.\n";
+    private static final String MESSAGE_EXAMPLE = "Example: " + COMMAND_WORD + " 1 " + FLAG_EMAIL_LAUNCH
+            + " (Launches the email application/browser for the person at index 1 in the address book.)";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + MESSAGE_DESCRIPTION + "\n\n"
+            + MESSAGE_PARAMETERS + "\n\n" + MESSAGE_EXAMPLE;
+
+    private final Index index;
+    private final ApplicationType type;
+
+    public LaunchCommand(Index index, ApplicationType type) {
+        requireNonNull(index);
+        requireNonNull(type);
+
+        this.index = index;
+        this.type = type;
+    }
+
+    @Override
+    public CommandResult execute(Model model) throws CommandException {
+        requireNonNull(model);
+        List<Person> lastShownList = model.getSortedAndFilteredPersonList();
+
+        if (index.getZeroBased() >= lastShownList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        }
+
+        Person personToLaunch = lastShownList.get(index.getZeroBased());
+        ApplicationLinkResult result = launchApplicationLink(personToLaunch, type);
+
+        return new CommandResult(result.getMessage());
+    }
+
+    private ApplicationLinkResult launchApplicationLink(Person person, ApplicationType type) throws CommandException {
+        requireNonNull(person);
+        requireNonNull(type);
+
+        switch (type) {
+        case EMAIL: {
+            if (person.getEmail().isEmpty()) {
+                throw new CommandException(String.format(MESSAGE_MISSING_EMAIL, person.getName().fullName));
+            }
+            return ApplicationLinkLauncher.launchEmail(person.getEmail().value);
+        }
+        case TELEGRAM:
+            if (person.getTelegram().isEmpty()) {
+                throw new CommandException(String.format(MESSAGE_MISSING_TELEGRAM, person.getName().fullName));
+            }
+            return ApplicationLinkLauncher.launchTelegram(person.getTelegram().value);
+        case GITHUB:
+            if (person.getGithub().isEmpty()) {
+                throw new CommandException(String.format(MESSAGE_MISSING_GITHUB, person.getName().fullName));
+            }
+            return ApplicationLinkLauncher.launchGithub(person.getGithub().value);
+        default:
+            throw new CommandException(CommandRegistry.getCommandHelp(COMMAND_WORD));
+        }
+    }
+
+    public static void registerHelp() {
+        CommandRegistry.register(
+                COMMAND_WORD,
+                MESSAGE_DESCRIPTION,
+                MESSAGE_EXAMPLE,
+                MESSAGE_PARAMETERS
+        );
+    }
+}

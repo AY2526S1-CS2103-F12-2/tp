@@ -14,6 +14,7 @@ import seedu.address.logic.parser.DeleteCommandParser;
 import seedu.address.logic.parser.EditCommandParser;
 import seedu.address.logic.parser.FindCommandParser;
 import seedu.address.logic.parser.HelpCommandParser;
+import seedu.address.logic.parser.LaunchCommandParser;
 import seedu.address.logic.parser.ListCommandParser;
 
 /**
@@ -35,7 +36,8 @@ public class CommandRegistry {
             "ExitCommand",
             "FindCommand",
             "HelpCommand",
-            "ListCommand"
+            "ListCommand",
+            "LaunchCommand"
     );
 
     /**
@@ -52,7 +54,7 @@ public class CommandRegistry {
          *
          * @param commandWord The command word used to invoke this command
          * @param description A brief description of what the command does
-         * @param example An example showing how to use the command
+         * @param example     An example showing how to use the command
          */
         public CommandInfo(String commandWord, String description, String example) {
             this(commandWord, description, example, null);
@@ -61,9 +63,9 @@ public class CommandRegistry {
         /**
          * Constructs a CommandInfo with the specified details including detailed usage information.
          *
-         * @param commandWord The command word used to invoke this command
-         * @param description A brief description of what the command does
-         * @param example An example showing how to use the command
+         * @param commandWord   The command word used to invoke this command
+         * @param description   A brief description of what the command does
+         * @param example       An example showing how to use the command
          * @param detailedUsage Detailed usage information including all parameters and flags
          */
         public CommandInfo(String commandWord, String description, String example, String detailedUsage) {
@@ -144,6 +146,7 @@ public class CommandRegistry {
         commandFactoryMap.put(ListCommand.COMMAND_WORD, (args) -> new ListCommandParser().parse(args));
         commandFactoryMap.put(ExitCommand.COMMAND_WORD, (args) -> new ExitCommand());
         commandFactoryMap.put(HelpCommand.COMMAND_WORD, (args) -> new HelpCommandParser().parse(args));
+        commandFactoryMap.put(LaunchCommand.COMMAND_WORD, (args) -> new LaunchCommandParser().parse(args));
 
         logger.info("Command registry initialized with " + commands.size() + " commands");
     }
@@ -154,7 +157,7 @@ public class CommandRegistry {
      *
      * @param commandWord The command word used to invoke the command
      * @param description A brief description of what the command does
-     * @param example An example showing how to use the command, or an empty string if no example is needed
+     * @param example     An example showing how to use the command, or an empty string if no example is needed
      */
     public static void register(String commandWord, String description, String example) {
         commands.put(commandWord, new CommandInfo(commandWord, description, example));
@@ -164,9 +167,9 @@ public class CommandRegistry {
      * Registers a command with its help information including detailed usage in the registry.
      * If a command with the same command word already exists, it will be replaced.
      *
-     * @param commandWord The command word used to invoke the command
-     * @param description A brief description of what the command does
-     * @param example An example showing how to use the command, or an empty string if no example is needed
+     * @param commandWord   The command word used to invoke the command
+     * @param description   A brief description of what the command does
+     * @param example       An example showing how to use the command, or an empty string if no example is needed
      * @param detailedUsage Detailed usage information including all parameters and flags
      */
     public static void register(String commandWord, String description, String example, String detailedUsage) {
@@ -194,7 +197,7 @@ public class CommandRegistry {
      *
      * @param commandWord The command word to get help information for
      * @return A formatted {@code String} containing help information for the specified command,
-     *         or an error message if the command is not registered
+     * or an error message if the command is not registered
      */
     public static String getCommandHelp(String commandWord) {
         CommandInfo info = commands.get(commandWord);
