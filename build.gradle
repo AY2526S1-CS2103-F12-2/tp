@@ -28,6 +28,10 @@ test {
     systemProperty("prism.order", "sw")
     systemProperty("prism.text", "t2k")
     systemProperty("java.awt.headless", "true")
+
+    jvmArgs += [
+            "--add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED",
+    ]
 }
 
 task coverage(type: JacocoReport) {
