@@ -23,6 +23,11 @@ checkstyle {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    systemProperty("testfx.robot", "glass")
+    systemProperty("testfx.headless", "true")
+    systemProperty("prism.order", "sw")
+    systemProperty("prism.text", "t2k")
+    systemProperty("java.awt.headless", "true")
 }
 
 task coverage(type: JacocoReport) {
@@ -61,6 +66,11 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.7.4'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: jUnitVersion
+
+    testImplementation "org.testfx:testfx-core:4.0.18"
+    testImplementation "org.testfx:testfx-junit5:4.0.18"
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.1'
+    testImplementation 'org.testfx:openjfx-monocle:17.0.10'
 
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: jUnitVersion
 }

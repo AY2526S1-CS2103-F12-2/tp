@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -23,6 +24,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * a menu bar and space where other JavaFX elements can be placed.
  */
 public class MainWindow extends UiPart<Stage> {
+    public static final KeyCode SCROLL_NEXT = KeyCode.DOWN;
+    public static final KeyCode SCROLL_PREVIOUS = KeyCode.UP;
 
     private static final String FXML = "MainWindow.fxml";
 
@@ -65,6 +68,8 @@ public class MainWindow extends UiPart<Stage> {
         setWindowDefaultSize(logic.getGuiSettings());
 
         setAccelerators();
+
+        setNavigationListeners();
 
         helpWindow = new HelpWindow();
     }
@@ -125,6 +130,38 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Sets up the key listeners for scroll and insert modes and keybindings associated to them.
+     */
+    void setNavigationListeners() {
+        getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(SCROLL_NEXT)) {
+                handleNavigateNext();
+                event.consume();
+            } else if (event.getCode().equals(SCROLL_PREVIOUS)) {
+                handleNavigatePrevious();
+                event.consume();
+            }
+        });
+    }
+
+    /**
+     * Handles navigation to the next person in scroll mode.
+     */
+    private void handleNavigateNext() {
+        personListPanel.goToNextPerson();
+    }
+
+    /**
+     * Handles navigation to the previous person in scroll mode.
+     */
+    private void handleNavigatePrevious() {
+        personListPanel.goToPreviousPerson();
+    }
+
+    /**
+>>>>>>> d01e44aa (Change Scroll to be non-modal)
      * Sets the default size based on {@code guiSettings}.
      */
     private void setWindowDefaultSize(GuiSettings guiSettings) {

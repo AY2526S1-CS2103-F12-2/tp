@@ -30,6 +30,35 @@ public class PersonListPanel extends UiPart<Region> {
     }
 
     /**
+     * Selects the next person in the list based on the selection model.
+     */
+    public void goToNextPerson() {
+        int currentIndex = personListView.getSelectionModel().getSelectedIndex();
+        if (currentIndex < personListView.getItems().size() - 1) {
+            personListView.getSelectionModel().select(currentIndex + 1);
+            personListView.scrollTo(currentIndex + 1);
+        }
+    }
+
+    /**
+     * Selects the previous person in the list based on the selection model.
+     */
+    public void goToPreviousPerson() {
+        int currentIndex = personListView.getSelectionModel().getSelectedIndex();
+        if (currentIndex > 0) {
+            personListView.getSelectionModel().select(currentIndex - 1);
+            personListView.scrollTo(currentIndex - 1);
+        }
+    }
+
+    /**
+     * Returns the currently selected person.
+     */
+    public Person getSelectedPerson() {
+        return personListView.getSelectionModel().getSelectedItem();
+    }
+
+    /**
      * Custom {@code ListCell} that displays the graphics of a {@code Person} using a {@code PersonCard}.
      */
     class PersonListViewCell extends ListCell<Person> {
