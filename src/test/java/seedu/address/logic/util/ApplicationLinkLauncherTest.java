@@ -34,7 +34,8 @@ public class ApplicationLinkLauncherTest {
             verify(mockDesktop, times(1)).browse(any(URI.class));
             assertNotNull(result);
             assertEquals(
-                    String.format(ApplicationLinkLauncher.MESSAGE_SUCCESS, ApplicationLinkLauncher.ApplicationType.EMAIL),
+                    String.format(ApplicationLinkLauncher.MESSAGE_SUCCESS,
+                            ApplicationLinkLauncher.ApplicationType.EMAIL),
                     result.getMessage()
             );
         } catch (IOException e) {
@@ -70,7 +71,8 @@ public class ApplicationLinkLauncherTest {
             verify(mockDesktop, times(1)).browse(any(URI.class));
             assertNotNull(result);
             assertEquals(
-                    String.format(ApplicationLinkLauncher.MESSAGE_SUCCESS, ApplicationLinkLauncher.ApplicationType.GITHUB),
+                    String.format(ApplicationLinkLauncher.MESSAGE_SUCCESS,
+                            ApplicationLinkLauncher.ApplicationType.GITHUB),
                     result.getMessage()
             );
         } catch (IOException e) {
@@ -89,7 +91,8 @@ public class ApplicationLinkLauncherTest {
 
         assertNotNull(result);
         assertEquals(
-                String.format(ApplicationLinkLauncher.MESSAGE_FAILURE, ApplicationLinkLauncher.ApplicationType.GITHUB),
+                String.format(ApplicationLinkLauncher.MESSAGE_FAILURE,
+                        ApplicationLinkLauncher.ApplicationType.GITHUB),
                 result.getMessage()
         );
     }
@@ -106,7 +109,8 @@ public class ApplicationLinkLauncherTest {
         // Assert: ensure the result indicates failure
         assertFalse(result.isSuccess(), "Expected failure when Desktop is not supported");
         assertEquals(
-                String.format(ApplicationLinkLauncher.MESSAGE_FAILURE, ApplicationLinkLauncher.ApplicationType.TELEGRAM),
+                String.format(ApplicationLinkLauncher.MESSAGE_FAILURE,
+                        ApplicationLinkLauncher.ApplicationType.TELEGRAM),
                 result.getMessage()
         );
     }

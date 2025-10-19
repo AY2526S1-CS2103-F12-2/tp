@@ -5,36 +5,45 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Utility class to launch external application links such as email, Telegram, and GitHub.
+ */
 public class ApplicationLinkLauncher {
 
-    private static Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+    protected static final String MESSAGE_SUCCESS = "Launched %s successfully.";
+    protected static final String MESSAGE_FAILURE = "Failed to launch %s.";
 
-    static void setDesktop(Desktop mockDesktop) {
-        desktop = mockDesktop;
-    }
 
     private static final String LAUNCH_EMAIL_PREFIX = "mailto:";
     private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
     private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
 
-    protected static final String MESSAGE_SUCCESS = "Launched %s successfully.";
-    protected static final String MESSAGE_FAILURE = "Failed to launch %s.";
+    private static Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 
+
+
+    static void setDesktop(Desktop mockDesktop) {
+        desktop = mockDesktop;
+    }
+
+    /**
+     * Enum representing different application types.
+     */
     public enum ApplicationType {
         EMAIL,
         TELEGRAM,
         GITHUB
     }
 
-    public static ApplicationLinkResult  launchEmail(String email) {
+    public static ApplicationLinkResult launchEmail(String email) {
         return launchApplicationLink(LAUNCH_EMAIL_PREFIX + email, ApplicationType.EMAIL);
     }
 
-    public static ApplicationLinkResult  launchTelegram(String handle) {
+    public static ApplicationLinkResult launchTelegram(String handle) {
         return launchApplicationLink(LAUNCH_TELEGRAM_PREFIX + handle, ApplicationType.TELEGRAM);
     }
 
-    public static ApplicationLinkResult  launchGithub(String username) {
+    public static ApplicationLinkResult launchGithub(String username) {
         return launchApplicationLink(LAUNCH_GITHUB_PREFIX + username, ApplicationType.GITHUB);
     }
 

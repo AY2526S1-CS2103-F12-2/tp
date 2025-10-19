@@ -10,7 +10,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.logic.util.ApplicationLinkLauncher;
-import seedu.address.logic.util.ApplicationLinkResult;
 import seedu.address.model.person.Person;
 
 /**
@@ -20,8 +19,6 @@ public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
 
-    private final Consumer<String> feedbackConsumer;
-
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
      * As a consequence, UI elements' variable names cannot be set to such keywords
@@ -29,8 +26,9 @@ public class PersonCard extends UiPart<Region> {
      *
      * @see <a href="https://github.com/se-edu/addressbook-level4/issues/336">The issue on AddressBook level 4</a>
      */
-
     public final Person person;
+
+    private final Consumer<String> feedbackConsumer;
 
     @FXML
     private HBox cardPane;
