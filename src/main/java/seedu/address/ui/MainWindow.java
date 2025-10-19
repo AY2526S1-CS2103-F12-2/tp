@@ -130,8 +130,6 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Sets up the key listeners for scroll and insert modes and keybindings associated to them.
      */
     void setNavigationListeners() {
@@ -161,7 +159,6 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
->>>>>>> d01e44aa (Change Scroll to be non-modal)
      * Sets the default size based on {@code guiSettings}.
      */
     private void setWindowDefaultSize(GuiSettings guiSettings) {
