@@ -24,9 +24,9 @@ public class LaunchCommand extends Command {
 
     public static final String COMMAND_WORD = "launch";
 
-    private static final String MESSAGE_MISSING_EMAIL = "%s This person does not have an email address.";
-    private static final String MESSAGE_MISSING_TELEGRAM = "%s This person does not have a Telegram handle.";
-    private static final String MESSAGE_MISSING_GITHUB = "%s This person does not have a GitHub profile.";
+    protected static final String MESSAGE_MISSING_EMAIL = "%s This person does not have an email address.";
+    protected static final String MESSAGE_MISSING_TELEGRAM = "%s This person does not have a Telegram handle.";
+    protected static final String MESSAGE_MISSING_GITHUB = "%s This person does not have a GitHub profile.";
 
     private static final String MESSAGE_DESCRIPTION =
             "Launches the specified application for a person in the address book";
@@ -43,6 +43,7 @@ public class LaunchCommand extends Command {
             + " (Launches the email application/browser for the person at index 1 in the address book.)";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + MESSAGE_DESCRIPTION + "\n\n"
             + MESSAGE_PARAMETERS + "\n" + MESSAGE_EXAMPLE;
+    public static final String MESSAGE_UNRECOGNIZED_FLAG = "Unrecognized application flag provided.\n" + MESSAGE_USAGE;
 
     private final Index index;
     private final ApplicationType type;
@@ -96,18 +97,20 @@ public class LaunchCommand extends Command {
             }
             return ApplicationLinkLauncher.launchEmail(person.getEmail().value);
         }
-        case TELEGRAM:
+        case TELEGRAM: {
             if (person.getTelegram().isEmpty()) {
                 throw new CommandException(String.format(MESSAGE_MISSING_TELEGRAM, person.getName().fullName));
             }
             return ApplicationLinkLauncher.launchTelegram(person.getTelegram().value);
+        }
         case GITHUB:
             if (person.getGithub().isEmpty()) {
                 throw new CommandException(String.format(MESSAGE_MISSING_GITHUB, person.getName().fullName));
             }
             return ApplicationLinkLauncher.launchGithub(person.getGithub().value);
-        default:
-            throw new CommandException(CommandRegistry.getCommandHelp(COMMAND_WORD));
+        default: {
+            throw new CommandException(MESSAGE_UNRECOGNIZED_FLAG);
+        }
         }
     }
 

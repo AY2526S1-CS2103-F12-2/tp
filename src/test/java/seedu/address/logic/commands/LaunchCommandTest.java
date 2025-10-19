@@ -6,6 +6,10 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_GITHUB_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TELEGRAM_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.logic.commands.LaunchCommand.MESSAGE_MISSING_EMAIL;
+import static seedu.address.logic.commands.LaunchCommand.MESSAGE_MISSING_GITHUB;
+import static seedu.address.logic.commands.LaunchCommand.MESSAGE_MISSING_TELEGRAM;
+import static seedu.address.logic.commands.LaunchCommand.MESSAGE_UNRECOGNIZED_FLAG;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 
@@ -114,7 +118,7 @@ public class LaunchCommandTest {
 
         LaunchCommand command = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
         assertCommandFailure(command, model,
-                String.format("%s This person does not have an email address.", person.getName().fullName));
+                String.format(MESSAGE_MISSING_EMAIL, person.getName().fullName));
     }
 
     /**
@@ -128,7 +132,7 @@ public class LaunchCommandTest {
 
         LaunchCommand command = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.TELEGRAM);
         assertCommandFailure(command, model,
-                String.format("%s This person does not have a Telegram handle.", person.getName().fullName));
+                String.format(MESSAGE_MISSING_TELEGRAM, person.getName().fullName));
     }
 
     /**
@@ -142,6 +146,53 @@ public class LaunchCommandTest {
 
         LaunchCommand command = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.GITHUB);
         assertCommandFailure(command, model,
-                String.format("%s This person does not have a GitHub profile.", person.getName().fullName));
+                String.format(MESSAGE_MISSING_GITHUB, person.getName().fullName));
+    }
+
+    /**
+     * Tests that executing a LaunchCommand with an unrecognized application type
+     * results in a CommandException being thrown.
+     */
+    @Test
+    public void execute_unknownApplicationType_throwsCommandException() {
+        Person person = new PersonBuilder().withEmail(VALID_EMAIL_AMY).build();
+        model.addPerson(person);
+
+        LaunchCommand command = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.UNKOWNN);
+        assertCommandFailure(command, model, MESSAGE_UNRECOGNIZED_FLAG);
+    }
+
+    /* The following test cases checks if the equals methods works properly */
+    @Test
+    public void equals_sameObject_returnsTrue() {
+        LaunchCommand launchCommand = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        assert launchCommand.equals(launchCommand);
+    }
+
+    @Test
+    public void equals_notInstanceOfLaunchCommand_returnsFalse() {
+        LaunchCommand launchCommand = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        assert !launchCommand.equals("Some String");
+    }
+
+    @Test
+    public void equals_sameValues_returnsTrue() {
+        LaunchCommand launchCommand1 = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        LaunchCommand launchCommand2 = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        assert launchCommand1.equals(launchCommand2);
+    }
+
+    @Test
+    public void equals_differentIndex_returnsFalse() {
+        LaunchCommand launchCommand1 = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        LaunchCommand launchCommand2 = new LaunchCommand(INDEX_SECOND_PERSON, ApplicationType.EMAIL);
+        assert !launchCommand1.equals(launchCommand2);
+    }
+
+    @Test
+    public void equals_differentApplicationType_returnsFalse() {
+        LaunchCommand launchCommand1 = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.EMAIL);
+        LaunchCommand launchCommand2 = new LaunchCommand(INDEX_FIRST_PERSON, ApplicationType.TELEGRAM);
+        assert !launchCommand1.equals(launchCommand2);
     }
 }

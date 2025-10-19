@@ -1,5 +1,7 @@
 package seedu.address.logic.util;
 
+import static java.util.Objects.requireNonNull;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -20,9 +22,12 @@ public class ApplicationLinkLauncher {
 
     private static Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 
-
-
-    static void setDesktop(Desktop mockDesktop) {
+    /**
+     * Sets a mock Desktop instance for testing purposes.
+     *
+     * @param mockDesktop The mock Desktop instance to be used.
+     */
+    public static void setDesktop(Desktop mockDesktop) {
         desktop = mockDesktop;
     }
 
@@ -32,7 +37,8 @@ public class ApplicationLinkLauncher {
     public enum ApplicationType {
         EMAIL,
         TELEGRAM,
-        GITHUB
+        GITHUB,
+        UNKOWNN
     }
 
     public static ApplicationLinkResult launchEmail(String email) {
@@ -62,7 +68,7 @@ public class ApplicationLinkLauncher {
     }
 
     private static void openLink(URI uri) throws IOException {
-        assert uri != null : "URI should not be null when opening link.";
+        requireNonNull(uri);
         if (desktop != null) {
             desktop.browse(uri);
         } else {
