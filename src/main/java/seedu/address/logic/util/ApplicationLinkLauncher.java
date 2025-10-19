@@ -7,9 +7,18 @@ import java.net.URISyntaxException;
 
 public class ApplicationLinkLauncher {
 
+    private static Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+
+    static void setDesktop(Desktop mockDesktop) {
+        desktop = mockDesktop;
+    }
+
     private static final String LAUNCH_EMAIL_PREFIX = "mailto:";
     private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
     private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
+
+    protected static final String MESSAGE_SUCCESS = "Launched %s successfully.";
+    protected static final String MESSAGE_FAILURE = "Failed to launch %s.";
 
     public enum ApplicationType {
         EMAIL,
@@ -29,16 +38,13 @@ public class ApplicationLinkLauncher {
         return launchApplicationLink(LAUNCH_GITHUB_PREFIX + username, ApplicationType.GITHUB);
     }
 
-    private static ApplicationLinkResult launchApplicationLink(String link, ApplicationType type) {
+    protected static ApplicationLinkResult launchApplicationLink(String link, ApplicationType type) {
         try {
             URI uri = parseToUri(link);
             openLink(uri);
-            // Result Display SUCCESS
-            return new ApplicationLinkResult(true, type + " link opened successfully.");
+            return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS, type));
         } catch (URISyntaxException | IOException e) {
-            System.out.println("FAHH");
-            // Result Display ERROR
-            return new ApplicationLinkResult(false, "Failed to open " + type + " link.");
+            return new ApplicationLinkResult(false, String.format(MESSAGE_FAILURE, type));
         }
     }
 
@@ -47,6 +53,11 @@ public class ApplicationLinkLauncher {
     }
 
     private static void openLink(URI uri) throws IOException {
-        Desktop.getDesktop().browse(uri);
+        assert uri != null : "URI should not be null when opening link.";
+        if (desktop != null) {
+            desktop.browse(uri);
+        } else {
+            throw new IOException();
+        }
     }
 }
