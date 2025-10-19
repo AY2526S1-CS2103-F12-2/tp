@@ -12,7 +12,10 @@ import java.net.URISyntaxException;
  */
 public class ApplicationLinkLauncher {
 
-    public static final String MESSAGE_SUCCESS = "Launched %s successfully.";
+    public static final String MESSAGE_TELEGRAM_NOTE =
+            "Note: You can only launch Telegram links from the browser if you have the"
+                    + " Telegram application installed on your device.";
+    public static final String MESSAGE_SUCCESS = "Launched %s successfully.\n" + MESSAGE_TELEGRAM_NOTE;
     public static final String MESSAGE_FAILURE = "Failed to launch %s.";
 
 
