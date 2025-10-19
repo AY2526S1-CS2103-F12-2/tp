@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -29,9 +30,9 @@
       </HBox>
       <FlowPane fx:id="tags" />
       <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
-      <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
-      <Label fx:id="telegram" styleClass="cell_small_label" text="\$telegram" />
-      <Label fx:id="github" styleClass="cell_small_label" text="\$telegram" />
+      <Hyperlink fx:id="email" styleClass="cell_small_hyperlink" onAction="#launchEmail" text="\$email" />
+      <Hyperlink fx:id="telegram" styleClass="cell_small_hyperlink" onAction="#launchTelegram" text="\$telegram" />
+      <Hyperlink fx:id="github" styleClass="cell_small_hyperlink" onAction="#launchGithub" text="\$telegram" />
     </VBox>
   </GridPane>
 </HBox>

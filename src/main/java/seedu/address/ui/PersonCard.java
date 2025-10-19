@@ -1,8 +1,13 @@
 package seedu.address.ui;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Comparator;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +20,10 @@ import seedu.address.model.person.Person;
 public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
+
+    private static final String LAUNCH_EMAIL_PREFIX = "mailto:";
+    private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
+    private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -34,14 +43,21 @@ public class PersonCard extends UiPart<Region> {
     private Label id;
     @FXML
     private Label phone;
-    @FXML
-    private Label email;
-    @FXML
-    private Label telegram;
-    @FXML
-    private Label github;
+//    @FXML
+//    private Label email;
+//    @FXML
+//    private Label telegram;
+//    @FXML
+//    private Label github;
     @FXML
     private FlowPane tags;
+
+    @FXML
+    private Hyperlink email;
+    @FXML
+    private Hyperlink telegram;
+    @FXML
+    private Hyperlink github;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -89,4 +105,37 @@ public class PersonCard extends UiPart<Region> {
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
+
+
+    public void launchEmail() {
+        launchApplicationLink(LAUNCH_EMAIL_PREFIX + person.getEmail().value);
+    }
+
+    public void launchTelegram() {
+        launchApplicationLink(LAUNCH_TELEGRAM_PREFIX + person.getTelegram().value);
+    }
+
+    public void launchGithub() {
+        launchApplicationLink(LAUNCH_GITHUB_PREFIX + person.getGithub().value);
+    }
+
+    public void launchApplicationLink(String link) {
+        try {
+            URI uri = parseToUri(link);
+            openLink(uri);
+            // Result Display SUCCESS
+        } catch (URISyntaxException | IOException e) {
+            System.out.println("FAHH");
+            // Result Display ERROR
+        }
+    }
+
+    public URI parseToUri(String link) throws URISyntaxException {
+        return new URI(link);
+    }
+
+    public void openLink(URI uri) throws IOException {
+        Desktop.getDesktop().browse(uri);
+    }
+
 }

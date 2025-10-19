@@ -132,6 +132,22 @@
     -fx-text-fill: #010504;
 }
 
+.cell_small_hyperlink {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 13px;
+    -fx-text-fill: #ffffff;
+}
+
+.cell_small_hyperlink:hover {
+    -fx-text-fill: #0056b3; /* Darker blue on hover */
+    -fx-underline: false;
+}
+
+.hyperlink:visited {
+    -fx-text-fill: #29006b; /* Purple for visited links */
+    -fx-underline: false;
+}
+
 .stack-pane {
      -fx-background-color: derive(#1d1d1d, 20%);
 }
