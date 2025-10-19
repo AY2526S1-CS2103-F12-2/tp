@@ -6,8 +6,6 @@ import static seedu.address.logic.parser.CliSyntax.FLAG_TELEGRAM_LAUNCH;
 import static seedu.address.logic.parser.CliSyntax.FLAG_GITHUB_LAUNCH;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.logic.commands.CommandRegistry;
-import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.util.ApplicationLinkLauncher.ApplicationType;
 import seedu.address.logic.commands.LaunchCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -54,7 +52,7 @@ public class LaunchCommandParser implements Parser<LaunchCommand> {
         } else if (!emailFlag && !telegramFlag && githubFlag) {
             return new LaunchCommand(index, ApplicationType.GITHUB);
         } else {
-            throw new ParseException("Please specify exactly one application to launch.");
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LaunchCommand.MESSAGE_USAGE));
         }
     }
 }

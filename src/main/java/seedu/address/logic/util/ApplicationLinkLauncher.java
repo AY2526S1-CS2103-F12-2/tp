@@ -10,8 +10,8 @@ import java.net.URISyntaxException;
  */
 public class ApplicationLinkLauncher {
 
-    protected static final String MESSAGE_SUCCESS = "Launched %s successfully.";
-    protected static final String MESSAGE_FAILURE = "Failed to launch %s.";
+    public static final String MESSAGE_SUCCESS = "Launched %s successfully.";
+    public static final String MESSAGE_FAILURE = "Failed to launch %s.";
 
 
     private static final String LAUNCH_EMAIL_PREFIX = "mailto:";

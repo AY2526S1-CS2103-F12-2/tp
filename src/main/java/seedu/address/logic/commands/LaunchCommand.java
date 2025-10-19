@@ -38,7 +38,7 @@ public class LaunchCommand extends Command {
     private static final String MESSAGE_EXAMPLE = "Example: " + COMMAND_WORD + " 1 " + FLAG_EMAIL_LAUNCH
             + " (Launches the email application/browser for the person at index 1 in the address book.)";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + MESSAGE_DESCRIPTION + "\n\n"
-            + MESSAGE_PARAMETERS + "\n\n" + MESSAGE_EXAMPLE;
+            + MESSAGE_PARAMETERS + "\n" + MESSAGE_EXAMPLE;
 
     private final Index index;
     private final ApplicationType type;
@@ -90,6 +90,18 @@ public class LaunchCommand extends Command {
         default:
             throw new CommandException(CommandRegistry.getCommandHelp(COMMAND_WORD));
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof LaunchCommand)) {
+            return false;
+        }
+        LaunchCommand otherCommand = (LaunchCommand) other;
+        return index.equals(otherCommand.index) && type == otherCommand.type;
     }
 
     public static void registerHelp() {

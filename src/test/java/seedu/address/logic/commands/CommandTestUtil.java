@@ -75,6 +75,8 @@ public class CommandTestUtil {
     public static final String INVALID_GITHUB_DESC = " " + PREFIX_GITHUB + "john_doe"; // '_' not allowed in GitHub
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
 
+    public static final String INVALID_LAUNCH_APP_FLAG = " " + "-x"; // 'x' not a valid launch application flag
+
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
 
