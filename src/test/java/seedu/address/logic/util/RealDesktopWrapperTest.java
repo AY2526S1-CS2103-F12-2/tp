@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
 import java.awt.Desktop;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
