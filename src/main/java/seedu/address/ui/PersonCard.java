@@ -101,19 +101,27 @@ public class PersonCard extends UiPart<Region> {
 
     /**
      * Launches the email application with the person's email address.
+     * FeedbackConsumer will set resultDisplay based on success/failure of launch.
      */
+    @FXML
     public void launchEmail() {
         feedbackConsumer.accept(ApplicationLinkLauncher.launchEmail(person.getEmail().value).getMessage());
     }
 
     /**
      * Launches the telegram application with the person's telegram handle.
-     *
+     * FeedbackConsumer will set resultDisplay based on success/failure of launch.
      */
+    @FXML
     public void launchTelegram() {
         feedbackConsumer.accept(ApplicationLinkLauncher.launchTelegram(person.getTelegram().value).getMessage());
     }
 
+    /**
+     * Launches the github page with the person's github username.
+     * FeedbackConsumer will set resultDisplay based on success/failure of launch.
+     */
+    @FXML
     public void launchGithub() {
         feedbackConsumer.accept(ApplicationLinkLauncher.launchGithub(person.getGithub().value).getMessage());
     }

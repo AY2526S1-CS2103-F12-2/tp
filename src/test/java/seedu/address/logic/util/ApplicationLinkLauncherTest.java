@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -36,12 +37,18 @@ public class ApplicationLinkLauncherTest {
     @Test
     public void launchEmail_validEmail_returnsSuccess() {
         // Mock that mail action is supported
-        when(mockDesktop.isSupported(Desktop.Action.MAIL)).thenReturn(true);
-
-        ApplicationLinkResult result =
-                ApplicationLinkLauncher.launchEmail("test@example.com");
 
         try {
+            Desktop mockDesktop = mock(Desktop.class);
+            when(mockDesktop.isSupported(Desktop.Action.MAIL)).thenReturn(true);
+            doNothing().when(mockDesktop).mail(any(URI.class));
+
+            // Inject the mock
+            ApplicationLinkLauncher.setDesktop(mockDesktop);
+
+            ApplicationLinkResult result =
+                    ApplicationLinkLauncher.launchEmail("test@example.com");
+
             verify(mockDesktop, times(1)).mail(any(URI.class));
             assertNotNull(result);
             assertEquals(
@@ -58,11 +65,17 @@ public class ApplicationLinkLauncherTest {
     @Test
     public void launchTelegram_validHandle_returnsSuccess() {
         // Mock that browse action is supported
-        when(mockDesktop.isSupported(Desktop.Action.BROWSE)).thenReturn(true);
-
-        ApplicationLinkResult result =
-                ApplicationLinkLauncher.launchTelegram("testhandle");
         try {
+            Desktop mockDesktop = mock(Desktop.class);
+            when(mockDesktop.isSupported(Desktop.Action.BROWSE)).thenReturn(true);
+            doNothing().when(mockDesktop).browse(any(URI.class));
+
+            // Inject the mock
+            ApplicationLinkLauncher.setDesktop(mockDesktop);
+
+            ApplicationLinkResult result =
+                    ApplicationLinkLauncher.launchTelegram("testhandle");
+
             verify(mockDesktop, times(1)).browse(any(URI.class));
             assertNotNull(result);
             assertEquals(
@@ -80,11 +93,17 @@ public class ApplicationLinkLauncherTest {
     @Test
     public void launchGithub_validUsername_returnsSuccess() {
         // Mock that browse action is supported
-        when(mockDesktop.isSupported(Desktop.Action.BROWSE)).thenReturn(true);
-
-        ApplicationLinkResult result =
-                ApplicationLinkLauncher.launchGithub("testuser");
         try {
+            Desktop mockDesktop = mock(Desktop.class);
+            when(mockDesktop.isSupported(Desktop.Action.BROWSE)).thenReturn(true);
+            doNothing().when(mockDesktop).browse(any(URI.class));
+
+            // Inject the mock
+            ApplicationLinkLauncher.setDesktop(mockDesktop);
+
+            ApplicationLinkResult result =
+                    ApplicationLinkLauncher.launchGithub("testuser");
+
             verify(mockDesktop, times(1)).browse(any(URI.class));
             assertNotNull(result);
             assertEquals(
