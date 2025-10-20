@@ -24,7 +24,7 @@ public class ApplicationLinkLauncher {
     private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
     private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
 
-    private static DesktopWrapper desktopWrapper;
+    private static DesktopWrapper desktopWrapper = new RealDesktopWrapper();
 
     public static void setDesktopWrapper(DesktopWrapper wrapper) {
         desktopWrapper = wrapper; // assign to the static field
