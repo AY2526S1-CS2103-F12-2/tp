@@ -24,14 +24,10 @@ public class ApplicationLinkLauncher {
     private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
     private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
 
-    private static Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-    /**
-     * Sets a mock Desktop instance for testing purposes.
-     *
-     * @param mockDesktop The mock Desktop instance to be used.
-     */
-    public static void setDesktop(Desktop mockDesktop) {
-        desktop = mockDesktop;
+    private static DesktopWrapper desktopWrapper;
+
+    public static void setDesktopWrapper(DesktopWrapper wrapper) {
+        desktopWrapper = wrapper; // assign to the static field
     }
 
     /**
@@ -47,7 +43,7 @@ public class ApplicationLinkLauncher {
     /**
      * Launches the email application with the specified email address.
      *
-     * @param   email The email address to launch.
+     * @param email The email address to launch.
      * @return The result of the launch attempt.
      */
     public static ApplicationLinkResult launchEmail(String email) {
@@ -79,8 +75,8 @@ public class ApplicationLinkLauncher {
     /**
      * Opens the given URI using the Desktop API, with a fallback for unsupported systems.
      *
-     * @param uri           The URI to be opened.
-     * @throws IOException  if both Desktop and fallback methods fail to open the link.
+     * @param uri The URI to be opened.
+     * @throws IOException if both Desktop and fallback methods fail to open the link.
      */
     private static void openLink(URI uri) throws IOException {
         requireNonNull(uri);
@@ -97,26 +93,25 @@ public class ApplicationLinkLauncher {
 
     /**
      * Attempts to open the link using the java.awt.Desktop API.
-     * @return  <code>true</code> if the link was successfully opened.
+     *
+     * @return <code>true</code> if the link was successfully opened.
      */
     protected static boolean attemptOpenWithDesktop(URI uri) throws IOException, UnsupportedOperationException {
-        if (desktop == null || !Desktop.isDesktopSupported()) {
+        if (desktopWrapper == null && !Desktop.isDesktopSupported()) {
             return false;
         }
-
         try {
-            // Select correct action based on URI scheme
+            // Use wrapper if set
             String scheme = uri.getScheme();
-            if ("mailto".equalsIgnoreCase(scheme) && isActionSupported(Action.MAIL)) {
-                // For mailto links, use the MAIL action
-                desktop.mail(uri);
+            if ("mailto".equalsIgnoreCase(scheme) && desktopWrapper.isSupported(Action.MAIL)) {
+                desktopWrapper.mail(uri);
                 return true;
-            } else if (isActionSupported(Action.BROWSE)) {
-                // All other links currently use the BROWSE action
-                desktop.browse(uri);
+            } else if (desktopWrapper.isSupported(Action.BROWSE)) {
+                desktopWrapper.browse(uri);
                 return true;
             }
             System.err.println("Desktop action not supported for: " + scheme);
+            return false;
         } catch (IOException | UnsupportedOperationException e) {
             System.err.println("Desktop API failed: " + e.getMessage());
         }
@@ -127,7 +122,8 @@ public class ApplicationLinkLauncher {
     /**
      * Fallback method for systems that don't support Desktop API (e.g., Linux).
      * Relying on custom DesktopAPI class to handle link opening.
-     * @return  <code>true</code> if the link was successfully opened.
+     *
+     * @return <code>true</code> if the link was successfully opened.
      */
     private static boolean tryOpenWithFallback(URI uri) {
         boolean success = DesktopApi.browse(uri);
@@ -138,20 +134,20 @@ public class ApplicationLinkLauncher {
     }
 
     protected static boolean isActionSupported(Action action) {
-        requireNonNull(desktop);
+        requireNonNull(desktopWrapper);
         requireNonNull(action);
 
         switch (action) {
         case BROWSE:
-            return desktop.isSupported(Action.BROWSE);
+            return desktopWrapper.isSupported(Action.BROWSE);
         case MAIL:
-            return desktop.isSupported(Action.MAIL);
+            return desktopWrapper.isSupported(Action.MAIL);
         case OPEN:
-            return desktop.isSupported(Action.OPEN);
+            return desktopWrapper.isSupported(Action.OPEN);
         case EDIT:
-            return desktop.isSupported(Action.EDIT);
+            return desktopWrapper.isSupported(Action.EDIT);
         case PRINT:
-            return desktop.isSupported(Action.PRINT);
+            return desktopWrapper.isSupported(Action.PRINT);
         default:
             return false;
         }
