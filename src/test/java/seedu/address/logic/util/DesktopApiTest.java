@@ -91,6 +91,33 @@ public class DesktopApiTest {
         }
     }
 
+    @Test
+    void runCommand_returnsFalse_whenProcessEndsImmediately_exitValueZero() throws Exception {
+        try (MockedStatic<Runtime> runtimeMock = mockStatic(Runtime.class)) {
+            Process mockProcess = mock(Process.class);
+            when(mockProcess.exitValue()).thenReturn(0); // simulate process ends immediately
+
+            Runtime mockRuntime = mock(Runtime.class);
+            when(mockRuntime.exec(any(String[].class))).thenReturn(mockProcess);
+            runtimeMock.when(Runtime::getRuntime).thenReturn(mockRuntime);
+
+            assertFalse(DesktopApiHelper.runCommand("echo", "%s", "test"));
+        }
+    }
+
+    @Test
+    void runCommand_returnsFalse_whenProcessCrashes_exitValueNonZero() throws Exception {
+        try (MockedStatic<Runtime> runtimeMock = mockStatic(Runtime.class)) {
+            Process mockProcess = mock(Process.class);
+            when(mockProcess.exitValue()).thenReturn(1); // simulate process crashed
+
+            Runtime mockRuntime = mock(Runtime.class);
+            when(mockRuntime.exec(any(String[].class))).thenReturn(mockProcess);
+            runtimeMock.when(Runtime::getRuntime).thenReturn(mockRuntime);
+
+            assertFalse(DesktopApiHelper.runCommand("echo", "%s", "test"));
+        }
+    }
 
     @Test
     void browseDesktop_returnsFalse_whenDesktopNotSupported() {
