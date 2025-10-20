@@ -32,49 +32,6 @@ public class DesktopApi {
         return false;
     }
 
-    /**
-     * Opens the given file using the system's default application.
-     *
-     * @param file The file to be opened.
-     * @return true if the operation was successful, false otherwise.
-     */
-    public static boolean open(File file) {
-
-        if (openSystemSpecific(file.getPath())) {
-            return true;
-        }
-
-        if (openDesktop(file)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Edits the given file using the system's default application.
-     *
-     * @param file The file to be edited.
-     * @return true if the operation was successful, false otherwise.
-     */
-    public static boolean edit(File file) {
-
-        // you can try something like
-        // runCommand("gimp", "%s", file.getPath())
-        // based on user preferences.
-
-        if (openSystemSpecific(file.getPath())) {
-            return true;
-        }
-
-        if (editDesktop(file)) {
-            return true;
-        }
-
-        return false;
-    }
-
-
     static boolean openSystemSpecific(String what) {
 
         EnumOS os = getOs();
