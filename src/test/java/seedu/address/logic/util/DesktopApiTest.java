@@ -92,7 +92,7 @@ public class DesktopApiTest {
     }
 
     @Test
-    void runCommand_returnsFalse_whenProcessEndsImmediately_exitValueZero() throws Exception {
+    void runCommand_returnsFalseWhenProcessEndsImmediately_exitValueZero() throws Exception {
         try (MockedStatic<Runtime> runtimeMock = mockStatic(Runtime.class)) {
             Process mockProcess = mock(Process.class);
             when(mockProcess.exitValue()).thenReturn(0); // simulate process ends immediately
@@ -106,7 +106,7 @@ public class DesktopApiTest {
     }
 
     @Test
-    void runCommand_returnsFalse_whenProcessCrashes_exitValueNonZero() throws Exception {
+    void runCommand_returnsFalseWhenProcessCrashes_exitValueNonZero() throws Exception {
         try (MockedStatic<Runtime> runtimeMock = mockStatic(Runtime.class)) {
             Process mockProcess = mock(Process.class);
             when(mockProcess.exitValue()).thenReturn(1); // simulate process crashed
@@ -120,7 +120,7 @@ public class DesktopApiTest {
     }
 
     @Test
-    void browseDesktop_returnsFalse_whenDesktopNotSupported() {
+    void browseDesktop_returnsFalseWhenDesktopNotSupported() {
         try (MockedStatic<Desktop> desktopMock = mockStatic(Desktop.class)) {
             desktopMock.when(Desktop::isDesktopSupported).thenReturn(false);
             assertFalse(DesktopApiHelper.browseDesktop(mockUri));
