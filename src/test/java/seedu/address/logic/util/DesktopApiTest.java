@@ -48,12 +48,36 @@ public class DesktopApiTest {
     void getOs_returnsLinux_whenSystemPropertyContainsLinux() {
         System.setProperty("os.name", "Linux");
         assertTrue(DesktopApi.getOs().isLinux());
+
+        System.setProperty("os.name", "Solaris");
+        assertTrue(DesktopApi.getOs().isLinux());
+
+        System.setProperty("os.name", "sunos");
+        assertTrue(DesktopApi.getOs().isLinux());
+
+        System.setProperty("os.name", "unix");
+        assertTrue(DesktopApi.getOs().isLinux());
     }
 
     @Test
     void getOs_returnsUnknown_whenSystemPropertyIsRandom() {
         System.setProperty("os.name", "SomeOS");
         assertEquals(DesktopApi.EnumOS.unknown, DesktopApi.getOs());
+    }
+
+    @Test
+    public void enumOS_isMac_returnsTrue() {
+        assertTrue(DesktopApi.EnumOS.macos.isMac());
+    }
+
+    @Test
+    public void enumOS_isMac_returnsFalse() {
+        assertFalse(DesktopApi.EnumOS.unknown.isMac());
+    }
+
+    @Test
+    public void enumOS_isWindows_returnsFalse() {
+        assertTrue(DesktopApi.EnumOS.windows.isWindows());
     }
 
     @Test
