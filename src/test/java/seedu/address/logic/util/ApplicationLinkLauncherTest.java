@@ -137,9 +137,9 @@ public class ApplicationLinkLauncherTest {
         ApplicationLinkLauncher.setDesktop(null);
 
         // Mock DesktopAPI fallback to succeed
-        try (var mockedApi = mockStatic(DesktopAPI.class)) {
+        try (var mockedApi = mockStatic(DesktopApi.class)) {
             // Mock DesktopAPI fallback to succeed
-            mockedApi.when(() -> DesktopAPI.browse(any(URI.class))).thenReturn(true);
+            mockedApi.when(() -> DesktopApi.browse(any(URI.class))).thenReturn(true);
 
             URI uri = new URI("https://t.me/testhandle");
 
@@ -149,7 +149,7 @@ public class ApplicationLinkLauncherTest {
             });
 
             // Verify fallback was invoked once
-            mockedApi.verify(() -> DesktopAPI.browse(any(URI.class)), times(1));
+            mockedApi.verify(() -> DesktopApi.browse(any(URI.class)), times(1));
         } catch (URISyntaxException e) {
             // This block should not be reached in this test
             assert false : "URISyntaxException should not occur in this test.";
@@ -160,12 +160,12 @@ public class ApplicationLinkLauncherTest {
      * Occurs when both Desktop and DesktopAPI fallback methods fail
      */
     @Test
-    public void openLink_allMethodsFail_throwsIOException() {
+    public void openLink_allMethodsFail_throwsException() {
         // Desktop not supported
         ApplicationLinkLauncher.setDesktop(null);
 
-        try (var mockedApi = mockStatic(DesktopAPI.class)) {
-            mockedApi.when(() -> DesktopAPI.browse(any(URI.class))).thenReturn(false);
+        try (var mockedApi = mockStatic(DesktopApi.class)) {
+            mockedApi.when(() -> DesktopApi.browse(any(URI.class))).thenReturn(false);
             URI uri = new URI("https://github.com/testuser");
 
             var openLink = ApplicationLinkLauncher.class.getDeclaredMethod("openLink", URI.class);
@@ -233,7 +233,7 @@ public class ApplicationLinkLauncherTest {
      * Desktop method throws IOException
      */
     @Test
-    public void attemptOpenWithDesktop_catchIOException_returnFailure() {
+    public void attemptOpenWithDesktop_catchException_returnFailure() {
         when(mockDesktop.isSupported(any(Desktop.Action.class))).thenReturn(true);
         try {
             doThrow(new IOException("Simulated I/O error")).when(mockDesktop)

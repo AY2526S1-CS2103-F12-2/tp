@@ -11,37 +11,65 @@ import java.util.List;
  * A utility class to open files and browse URIs using the system's default applications.
  * Credits to https://stackoverflow.com/questions/18004150/desktop-api-is-not-supported-on-the-current-platform
  */
-public class DesktopAPI {
+public class DesktopApi {
 
+    /**
+     * Opens the default web browser to browse the given URI.
+     *
+     * @param uri The URI to be browsed.
+     * @return true if the operation was successful, false otherwise.
+     */
     public static boolean browse(URI uri) {
 
-        if (openSystemSpecific(uri.toString())) return true;
+        if (openSystemSpecific(uri.toString())) {
+            return true;
+        }
 
-        if (browseDESKTOP(uri)) return true;
+        if (browseDesktop(uri)) {
+            return true;
+        }
 
         return false;
     }
 
-
+    /**
+     * Opens the given file using the system's default application.
+     *
+     * @param file The file to be opened.
+     * @return true if the operation was successful, false otherwise.
+     */
     public static boolean open(File file) {
 
-        if (openSystemSpecific(file.getPath())) return true;
+        if (openSystemSpecific(file.getPath())) {
+            return true;
+        }
 
-        if (openDESKTOP(file)) return true;
+        if (openDesktop(file)) {
+            return true;
+        }
 
         return false;
     }
 
-
+    /**
+     * Edits the given file using the system's default application.
+     *
+     * @param file The file to be edited.
+     * @return true if the operation was successful, false otherwise.
+     */
     public static boolean edit(File file) {
 
         // you can try something like
         // runCommand("gimp", "%s", file.getPath())
         // based on user preferences.
 
-        if (openSystemSpecific(file.getPath())) return true;
+        if (openSystemSpecific(file.getPath())) {
+            return true;
+        }
 
-        if (editDESKTOP(file)) return true;
+        if (editDesktop(file)) {
+            return true;
+        }
 
         return false;
     }
@@ -52,24 +80,34 @@ public class DesktopAPI {
         EnumOS os = getOs();
 
         if (os.isLinux()) {
-            if (runCommand("kde-open", "%s", what)) return true;
-            if (runCommand("gnome-open", "%s", what)) return true;
-            if (runCommand("xdg-open", "%s", what)) return true;
+            if (runCommand("kde-open", "%s", what)) {
+                return true;
+            }
+            if (runCommand("gnome-open", "%s", what)) {
+                return true;
+            }
+            if (runCommand("xdg-open", "%s", what)) {
+                return true;
+            }
         }
 
         if (os.isMac()) {
-            if (runCommand("open", "%s", what)) return true;
+            if (runCommand("open", "%s", what)) {
+                return true;
+            }
         }
 
         if (os.isWindows()) {
-            if (runCommand("explorer", "%s", what)) return true;
+            if (runCommand("explorer", "%s", what)) {
+                return true;
+            }
         }
 
         return false;
     }
 
 
-    static boolean browseDESKTOP(URI uri) {
+    static boolean browseDesktop(URI uri) {
 
         logOut("Trying to use Desktop.getDesktop().browse() with " + uri.toString());
         try {
@@ -93,7 +131,7 @@ public class DesktopAPI {
     }
 
 
-    static boolean openDESKTOP(File file) {
+    static boolean openDesktop(File file) {
 
         logOut("Trying to use Desktop.getDesktop().open() with " + file.toString());
         try {
@@ -117,7 +155,7 @@ public class DesktopAPI {
     }
 
 
-    static boolean editDESKTOP(File file) {
+    static boolean editDesktop(File file) {
 
         logOut("Trying to use Desktop.getDesktop().edit() with " + file);
         try {
@@ -149,7 +187,9 @@ public class DesktopAPI {
 
         try {
             Process p = Runtime.getRuntime().exec(parts);
-            if (p == null) return false;
+            if (p == null) {
+                return false;
+            }
 
             try {
                 int retval = p.exitValue();
@@ -200,6 +240,9 @@ public class DesktopAPI {
         System.out.println(msg);
     }
 
+    /**
+     * Enum to represent the operating system types.
+     */
     public static enum EnumOS {
         linux, macos, solaris, unknown, windows;
 
@@ -221,7 +264,11 @@ public class DesktopAPI {
         }
     }
 
-
+    /**
+     * Determines the operating system of the current environment.
+     *
+     * @return The EnumOS representing the current operating system.
+     */
     public static EnumOS getOs() {
 
         String s = System.getProperty("os.name").toLowerCase();

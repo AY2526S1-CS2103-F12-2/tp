@@ -130,7 +130,7 @@ public class ApplicationLinkLauncher {
      * @return  <code>true</code> if the link was successfully opened.
      */
     private static boolean tryOpenWithFallback(URI uri) {
-        boolean success = DesktopAPI.browse(uri);
+        boolean success = DesktopApi.browse(uri);
         if (!success) {
             System.err.println("Fallback DesktopAPI failed to open link: " + uri);
         }
