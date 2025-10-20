@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -167,29 +166,23 @@ public class ApplicationLinkLauncherTest {
     public void openLink_allMethodsFail_throwsException() {
         // Desktop not supported
         DesktopWrapper mockWrapper = mock(DesktopWrapper.class);
-        when(mockWrapper.isSupported(any())).thenReturn(false); // Simulate not supported
+        when(mockWrapper.isSupported(any())).thenReturn(false);
         ApplicationLinkLauncher.setDesktopWrapper(mockWrapper);
 
         try (var mockedApi = mockStatic(DesktopApi.class)) {
             mockedApi.when(() -> DesktopApi.browse(any(URI.class))).thenReturn(false);
-            URI uri = new URI("https://github.com/testuser");
 
-            var openLink = ApplicationLinkLauncher.class.getDeclaredMethod("openLink", URI.class);
-            openLink.setAccessible(true);
+            ApplicationLinkResult result = ApplicationLinkLauncher.launchApplicationLink(
+                    "https://github.com/testuser", ApplicationLinkLauncher.ApplicationType.GITHUB);
 
-            Exception thrown = assertThrows(Exception.class, () -> openLink.invoke(null, uri));
+            assertNotNull(result);
+            assertEquals(
+                    String.format(ApplicationLinkLauncher.MESSAGE_FAILURE,
+                            ApplicationLinkLauncher.ApplicationType.GITHUB),
+                    result.getMessage()
+            );
 
-            // unwrap InvocationTargetException
-            Throwable cause = thrown.getCause();
-            assertNotNull(cause, "Expected underlying IOException cause");
-            assertTrue(cause instanceof IOException, "Expected IOException when all methods fail");
-            assertTrue(cause.getMessage().contains("Failed to open link"));
-        } catch (URISyntaxException e) {
-            // This block should not be reached in this test
-            assert false : "URISyntaxException should not occur in this test.";
-        } catch (Exception e) {
-            // Handle reflection exceptions
-            assert false : "Reflection exception occurred: " + e.getMessage();
+            mockedApi.verify(() -> DesktopApi.browse(any(URI.class)), times(1));
         }
     }
 
@@ -295,5 +288,12 @@ public class ApplicationLinkLauncherTest {
         assertTrue(
                 ApplicationLinkLauncher.isActionSupported(Desktop.Action.PRINT),
                 "Expected PRINT action to be supported");
+    }
+
+    @Test
+    public void getDesktopWrapper_nullDesktop_returnsDummyWrapper() {
+        ApplicationLinkLauncher.setDesktopWrapper(null);
+        DesktopWrapper wrapper = ApplicationLinkLauncher.getDesktopWrapper();
+        assertNotNull(wrapper, "Expected fallback DummyDesktopWrapper when wrapper is null");
     }
 }

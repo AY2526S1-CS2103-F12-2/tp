@@ -24,7 +24,19 @@ public class ApplicationLinkLauncher {
     private static final String LAUNCH_TELEGRAM_PREFIX = "https://t.me/";
     private static final String LAUNCH_GITHUB_PREFIX = "http://github.com/";
 
-    private static DesktopWrapper desktopWrapper = new RealDesktopWrapper();
+    private static DesktopWrapper desktopWrapper;
+
+    static DesktopWrapper getDesktopWrapper() {
+        if (desktopWrapper == null) {
+            try {
+                desktopWrapper = new RealDesktopWrapper();
+            } catch (Exception e) {
+                // CI or headless mode — fall back to a dummy wrapper
+                desktopWrapper = new DummyDesktopWrapper();
+            }
+        }
+        return desktopWrapper;
+    }
 
     public static void setDesktopWrapper(DesktopWrapper wrapper) {
         desktopWrapper = wrapper; // assign to the static field
@@ -97,17 +109,17 @@ public class ApplicationLinkLauncher {
      * @return <code>true</code> if the link was successfully opened.
      */
     protected static boolean attemptOpenWithDesktop(URI uri) throws IOException, UnsupportedOperationException {
-        if (desktopWrapper == null && !Desktop.isDesktopSupported()) {
+        if (getDesktopWrapper() == null && !Desktop.isDesktopSupported()) {
             return false;
         }
         try {
             // Use wrapper if set
             String scheme = uri.getScheme();
-            if ("mailto".equalsIgnoreCase(scheme) && desktopWrapper.isSupported(Action.MAIL)) {
-                desktopWrapper.mail(uri);
+            if ("mailto".equalsIgnoreCase(scheme) && getDesktopWrapper().isSupported(Action.MAIL)) {
+                getDesktopWrapper().mail(uri);
                 return true;
-            } else if (desktopWrapper.isSupported(Action.BROWSE)) {
-                desktopWrapper.browse(uri);
+            } else if (getDesktopWrapper().isSupported(Action.BROWSE)) {
+                getDesktopWrapper().browse(uri);
                 return true;
             }
             System.err.println("Desktop action not supported for: " + scheme);
@@ -134,7 +146,7 @@ public class ApplicationLinkLauncher {
     }
 
     protected static boolean isActionSupported(Action action) {
-        requireNonNull(desktopWrapper);
+        requireNonNull(getDesktopWrapper());
         requireNonNull(action);
 
         switch (action) {
