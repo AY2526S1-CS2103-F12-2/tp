@@ -49,6 +49,9 @@ public class PersonCard extends UiPart<Region> {
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
+     * @param person            The person whose details are to be displayed.
+     * @param displayedIndex    The index of the person in the list.
+     * @param feedbackConsumer  The consumer to handle feedback messages.
      */
     public PersonCard(Person person, int displayedIndex, Consumer<String> feedbackConsumer) {
         super(FXML);
@@ -96,10 +99,17 @@ public class PersonCard extends UiPart<Region> {
     }
 
 
+    /**
+     * Launches the email application with the person's email address.
+     */
     public void launchEmail() {
         feedbackConsumer.accept(ApplicationLinkLauncher.launchEmail(person.getEmail().value).getMessage());
     }
 
+    /**
+     * Launches the telegram application with the person's telegram handle.
+     *
+     */
     public void launchTelegram() {
         feedbackConsumer.accept(ApplicationLinkLauncher.launchTelegram(person.getTelegram().value).getMessage());
     }
