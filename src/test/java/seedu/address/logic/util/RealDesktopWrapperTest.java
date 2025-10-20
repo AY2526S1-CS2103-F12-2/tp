@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mockStatic;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -71,7 +70,7 @@ public class RealDesktopWrapperTest {
     }
 
     @Test
-    void mail_throwsIOExceptionIfDesktopThrows() throws IOException {
+    void mail_throwsExceptionIfDesktopThrows() throws IOException {
         URI uri = URI.create("mailto:test@example.com");
         doThrow(IOException.class).when(mockDesktop).mail(uri);
 
@@ -88,7 +87,7 @@ public class RealDesktopWrapperTest {
     }
 
     @Test
-    void browse_throwsIOExceptionIfDesktopThrows() throws IOException {
+    void browse_throwsExceptionIfDesktopThrows() throws IOException {
         URI uri = URI.create("https://example.com");
         doThrow(IOException.class).when(mockDesktop).browse(uri);
 
@@ -96,7 +95,7 @@ public class RealDesktopWrapperTest {
     }
 
     @Test
-    void constructor_DesktopNotSupported_throwsUnsupportedOperationException() {
+    void constructor_desktopNotSupported_throwsUnsupportedOperationException() {
         try (MockedStatic<Desktop> mockedStatic = mockStatic(Desktop.class)) {
             mockedStatic.when(Desktop::getDesktop).thenThrow(UnsupportedOperationException.class);
 
