@@ -1,70 +1,74 @@
 @startuml
-!include style.puml
-skinparam ArrowFontStyle plain
+autoactivate on
+hide footbox
 
-box Logic LOGIC_COLOR_T1
-participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant ":DeleteCommandParser" as DeleteCommandParser LOGIC_COLOR
-participant "d:DeleteCommand" as DeleteCommand LOGIC_COLOR
-participant "r:CommandResult" as CommandResult LOGIC_COLOR
+box "Logic" #LightBlue
+participant ":LogicManager" #3333C4
+participant ":StateManager" #3333C4
+participant ":AddressBookParser" #3333C4
+participant ":DeleteCommandParser" #3333C4
+participant "d:DeleteCommand" #3333C4
+participant "p:ConfirmationPendingResult" #3333C4
+participant "r:CommandResult" #3333C4
 end box
 
-box Model MODEL_COLOR_T1
-participant "m:Model" as Model MODEL_COLOR
+box "Model" #FF0000
+participant "m:Model" #9D0012
 end box
 
-[-> LogicManager : execute("delete 1")
-activate LogicManager
+-> ":LogicManager" #FFBBBB : execute("delete 1")
 
-LogicManager -> AddressBookParser : parseCommand("delete 1")
-activate AddressBookParser
+":LogicManager" -> ":LogicManager" #Red : buildCommand
+":LogicManager" -> ":StateManager" : isAwaitingUserConfirmation
+return false
+":LogicManager" -> ":AddressBookParser" #Orange : parseCommand("delete 1")
+create ":DeleteCommandParser"
+":AddressBookParser" -> ":DeleteCommandParser" #Grey : parse("1")
+create "d:DeleteCommand"
+":DeleteCommandParser" -> "d:DeleteCommand" #Blue :
+return d
+destroy ":DeleteCommandParser"
+return d
+return d
+return d
+":LogicManager" -> "d:DeleteCommand" #Blue : execute(m)
+create "p:ConfirmationPendingResult"
+"d:DeleteCommand" -> "p:ConfirmationPendingResult" #C8C8FA :
+return p
+return p
+destroy "d:DeleteCommand"
+":LogicManager" -> ":LogicManager" #Red : saveIfRequired(p)
+return
+return commandResult
 
-create DeleteCommandParser
-AddressBookParser -> DeleteCommandParser
-activate DeleteCommandParser
+-> ":LogicManager" #FFBBBB : execute("y/n")
 
-DeleteCommandParser --> AddressBookParser
-deactivate DeleteCommandParser
+":LogicManager" -> ":LogicManager" #Red : buildCommand
+":LogicManager" -> ":StateManager" : isAwaitingUserConfirmation
+return true
 
-AddressBookParser -> DeleteCommandParser : parse("1")
-activate DeleteCommandParser
+alt "y"
+    ":LogicManager" -> ":AddressBookParser" #Orange : parseConfirmationCommand("y")
+return ConfirmCommand
+":LogicManager" -> "p:ConfirmationPendingResult" #C8C8FA : execute(m)
+"p:ConfirmationPendingResult" -> "m:Model" : deletePerson(1)
+return
+create "r:CommandResult"
+"p:ConfirmationPendingResult" -> "r:CommandResult" :
+return
+return
+destroy "p:ConfirmationPendingResult"
 
-create DeleteCommand
-DeleteCommandParser -> DeleteCommand
-activate DeleteCommand
-
-DeleteCommand --> DeleteCommandParser :
-deactivate DeleteCommand
-
-DeleteCommandParser --> AddressBookParser : d
-deactivate DeleteCommandParser
-'Hidden arrow to position the destroy marker below the end of the activation bar.
-DeleteCommandParser -[hidden]-> AddressBookParser
-destroy DeleteCommandParser
-
-AddressBookParser --> LogicManager : d
-deactivate AddressBookParser
-
-LogicManager -> DeleteCommand : execute(m)
-activate DeleteCommand
-
-DeleteCommand -> Model : deletePerson(1)
-activate Model
-
-Model --> DeleteCommand
-deactivate Model
-
-create CommandResult
-DeleteCommand -> CommandResult
-activate CommandResult
-
-CommandResult --> DeleteCommand
-deactivate CommandResult
-
-DeleteCommand --> LogicManager : r
-deactivate DeleteCommand
-
-[<--LogicManager
-deactivate LogicManager
+else "n"
+    ":LogicManager" -> ":AddressBookParser" #Orange : parseConfirmationCommand("n")
+return ConfirmCommand
+":LogicManager" -> "p:ConfirmationPendingResult" #C8C8FA : execute(m)
+create "r:CommandResult"
+"p:ConfirmationPendingResult" -> "r:CommandResult"
+return CommandResult
+return
+destroy "p:ConfirmationPendingResult"
+end
+return
+return
 @enduml
