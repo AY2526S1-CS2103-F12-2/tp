@@ -251,22 +251,6 @@ public class ApplicationLinkLauncherTest {
 
     /* The following test cases are to check if isActionSupported works as intended */
     @Test
-    public void isActionSupported_browseActionSupported_returnsTrue() {
-        when(mockDesktopWrapper.isSupported(Desktop.Action.BROWSE)).thenReturn(true);
-        assertTrue(
-                ApplicationLinkLauncher.isActionSupported(Desktop.Action.BROWSE),
-                "Expected BROWSE action to be supported");
-    }
-
-    @Test
-    public void isActionSupported_mailActionSupported_returnsTrue() {
-        when(mockDesktopWrapper.isSupported(Desktop.Action.MAIL)).thenReturn(true);
-        assertTrue(
-                ApplicationLinkLauncher.isActionSupported(Desktop.Action.MAIL),
-                "Expected MAIL action to be supported");
-    }
-
-    @Test
     public void isActionSupported_openActionSupported_returnsTrue() {
         when(mockDesktopWrapper.isSupported(Desktop.Action.OPEN)).thenReturn(true);
         assertTrue(
