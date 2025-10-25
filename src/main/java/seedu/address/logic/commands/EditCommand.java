@@ -200,7 +200,7 @@ public class EditCommand extends Command {
     }
 
     /**
-     * @return <code>true</code> as AddCommand modifies the address book
+     * @return <code>true</code> as EditCommand modifies the address book
      * @inheritDoc
      */
     @Override
