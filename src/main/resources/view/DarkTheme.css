@@ -325,6 +325,10 @@
     -fx-padding: 8 1 8 1;
 }
 
+.pin-icon {
+    -fx-font-size: 18px;
+}
+
 #cardPane {
     -fx-background-color: transparent;
     -fx-border-width: 0;
