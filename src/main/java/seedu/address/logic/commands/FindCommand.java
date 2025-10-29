@@ -86,19 +86,22 @@ public class FindCommand extends Command {
         CommandRegistry.register(
                 COMMAND_WORD,
                 "Finds contacts whose names or tags contain any of the given keywords",
-                "Example: find n/alice bob charlie, find t/family friends",
-                "Usage: find n/KEYWORD [MORE_KEYWORDS]...find t/KEYWORD [MORE_KEYWORDS]...\n\n"
-                        + "Finds all contacts whose names contain any of the specified keywords (case-insensitive).\n\n"
+                "Example: find n/alice bob charlie\n"
+                        + "            Example: find t/family friends",
+                "Usage:\n  find n/KEYWORD [MORE_KEYWORDS]...\n  find t/KEYWORD [MORE_KEYWORDS]...\n\n"
+                        + "Finds all contacts whose names or tags contain any of the specified keywords "
+                        + "(case-insensitive).\n\n"
                         + "Parameters:\n"
-                        + "  PREFIX - Either 'n/' to search by name or 't/' to search by tag"
+                        + "  PREFIX - Either 'n/' to search by name or 't/' to search by tag\n"
                         + "  KEYWORD - One or more keywords to search for (required)\n\n"
                         + "Notes:\n"
+                        + "  - Keywords must match the start of the word (e.g. 'De' matches 'Derek')\n"
                         + "  - Only one prefix can be used at a time\n"
                         + "  - The search is case-insensitive (e.g., 'alice' matches 'Alice')\n"
-                        + "  - Only the name field is searched\n"
+                        + "  - Only the name field or tag field is searched\n"
                         + "  - Contacts matching at least one keyword will be displayed\n"
-                        + "  - If both prefixes provided. Only the first prefix is used.\n"
-                        + "  - Keywords must match the start of the word (e.g. 'De' matches 'Derek')"
+                        + "  - If both prefixes are provided. Only the first prefix is used."
+
         );
     }
 }
