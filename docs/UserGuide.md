@@ -250,6 +250,8 @@ These above confirmation inputs are case *insensitive*
 * Commands listed in the "Switching Modes" section are *global* - they don't need to be inserted into the Command Box.
 
 * `<Esc>` refers to the *escape key* on the keyboard.
+
+* Switching to scroll mode *does not clear pending state* - if you have a pending operation (e.g. deletion), you must confirm the operation upon switching back to insert mode.  
 </div>
 
 #### Insert Mode: `i`
