@@ -1,27 +1,28 @@
 @startuml
+!include style.puml
 autoactivate on
 hide footbox
 skinparam minClassWidth 150
-skinparam sequenceReferenceBackgroundColor #fffff
-box "Ui" #lightgreen
+skinparam sequenceReferenceBackgroundColor #D3D3D3
+box "Ui" UI_COLOR_T1
 participant ":PersonCard" #1D8900
 participant ":ResultDisplay" #1D8900
 
-box "Logic" #LightBlue
-participant ":ApplicationLinkLauncher" #3333C4
+box "Logic" LOGIC_COLOR_T1
+participant ":ApplicationLinkLauncher" LOGIC_COLOR
 participant ":DesktopApi" #3333C4
 participant "r:ApplicationLinkResult" #3333C4
 end box
 
 
--> ":PersonCard" #FFBBBB : launchTelegram
-":PersonCard" -> ":ApplicationLinkLauncher" #gray : launchTelegram(username)
+-> ":PersonCard" : launchTelegram
+":PersonCard" -> ":ApplicationLinkLauncher" : launchTelegram(username)
 ref over ":ApplicationLinkLauncher"
     Prepare URI for launching
 end ref
 
-":ApplicationLinkLauncher" -> ":DesktopApi" #Grey : browse(uri)
-":DesktopApi" -> ":DesktopApi" #gray : openSystemSpecific(uri)
+":ApplicationLinkLauncher" -> ":DesktopApi" : browse(uri)
+":DesktopApi" -> ":DesktopApi" : openSystemSpecific(uri)
 
 
 ref over ":DesktopApi"
@@ -30,7 +31,7 @@ end ref
 return
 alt #ebebeb !isSuccess
 
-":DesktopApi" -> ":DesktopApi" #gray : browseDesktop(uri)
+":DesktopApi" -> ":DesktopApi" : browseDesktop(uri)
 ref over ":DesktopApi"
     Launch using Java Desktop API
 end ref
@@ -41,12 +42,12 @@ destroy ":DesktopApi"
 
 
 create "r:ApplicationLinkResult"
-":ApplicationLinkLauncher" -> "r:ApplicationLinkResult" #Grey :
+":ApplicationLinkLauncher" -> "r:ApplicationLinkResult" :
 return r
 return
 destroy ":ApplicationLinkLauncher"
 
-":PersonCard" -> ":ResultDisplay" #gray : setFeedbackToUser(message)
+":PersonCard" -> ":ResultDisplay" : setFeedbackToUser(message)
 return
 
 destroy "r:ApplicationLinkResult"
