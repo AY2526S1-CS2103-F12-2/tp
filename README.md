@@ -2,7 +2,7 @@
 
 ![Ui](docs/images/Ui.png)
 
-# Devbooks
+# DevBooks
 
 DevBooks provides fast digital access to students in National University of Singapore, School of Computing, making it
 easier to contact any student using their preferred mode of communication. Allow students to find project mates from
@@ -16,9 +16,8 @@ the same project group easily and view the development profile of their contact.
 
 ## Documentation
 
-For detailed documentation of this project, see the [Devbooks Product Website](https://ay2526s1-cs2103-f12-2.github.io/tp/DeveloperGuide.html)
+For detailed documentation of this project, see the [DevBooks Product Website](https://ay2526s1-cs2103-f12-2.github.io/tp/DeveloperGuide.html)
 
 ## Acknowledgements
 
 This project is based on the `AddressBook-Level3` project created by the [SE-EDU initiative](https://se-education.org).
-

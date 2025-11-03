@@ -16,14 +16,16 @@ Third party Libraries Used:
 * [Hamcrest](https://github.com/hamcrest/JavaHamcrest)
 * [Mockito](https://github.com/mockito/mockito)
 
-OpenAI’s ChatGPT (GPT-5) was used by [Derek Qua](https://github.com/Derekqua) to help refine code quality, 
-improve documentation clarity, and verify 
+OpenAI’s ChatGPT (GPT-5) was used by [Derek Qua](https://github.com/Derekqua) to help refine code quality,
+improve documentation clarity, and verify
 certain implementation details.
 All AI-generated suggestions were reviewed and adapted to ensure they align with the project’s requirements and coding standards.
 
 Credits Adapted ideas:
 * [Cross Platform Launching](https://stackoverflow.com/questions/18004150/desktop-api-is-not-supported-on-the-current-platform)
     * Note: JavaDoc Headers were not provided by the original credited author, but by the developer ([MoshiMoshiMochi](https://github.com/MoshiMoshiMochi)) implementing this. Hence, these documentations may not be exactly what the original author envisioned.
+* Autocomplete: [Trie Data Structure](https://algs4.cs.princeton.edu/52trie/)
+    * Adapted from a symbol table of key-value pairs to a simpler implementation that only intends to check presence of words with prefixes.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -198,8 +200,10 @@ The `Model` component,
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+* saves command history in newline-delimited format, and provides a read-only view of it to the UI.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+* includes a `CsvAddressBookStorage` class that the `Model` holds a reference to to export data.
 
 ### Common classes
 
@@ -215,7 +219,7 @@ This section describes some noteworthy details on how certain features are imple
 
 #### Overview
 The sort list feature is an enhancement to the original list feature. Through specifying a flag, the user can sort
-and display the entire list by either alphabetical or recent order. This feature improves the navigability of large 
+and display the entire list by either alphabetical or recent order. This feature improves the navigability of large
 address books by allowing users to quickly locate contacts in a preferred viewing order, without altering the underlying
 data structure or saved order of entries.
 
@@ -225,23 +229,23 @@ users with greater flexibility and control over how information is displayed. Us
 some may want to find contacts alphabetically for quick reference, while others may prefer viewing their most recently
 added or edited contacts first.
 
-This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting 
+This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting
 operation view-based rather than data-based, the system maintains data integrity while enhancing the user experience,
 efficiency, and readability of the contact list.
 
 #### Design Considerations
-- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts 
-  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves 
+- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts
+  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves
   consistency across sessions and ensures that subsequent commands (like edit, delete, etc.) continue to operate on the
   same underlying list indices.
 
 - **Extensibility for Future Sorting Criteria**: The design allows for future expansion of sorting options, such as
-  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable 
+  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable
   comparator-based utility, new sorting flags can be easily integrated without altering the command’s core structure.
 
 #### Implementation Details
-- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the 
-  corresponding sorting mode to the `ListCommand`. 
+- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the
+  corresponding sorting mode to the `ListCommand`.
 
 - **Using Sorted List**: The implementation leverages JavaFX’s `SortedList` to dynamically sort the existing observable
   list of contacts without modifying the underlying data. The appropriate `comparator` is selected based on the flag
@@ -256,7 +260,7 @@ efficiency, and readability of the contact list.
   - `list`
   - Will list the entire contact list from the first added person to last added person.
 
-- **User sorts entire list by Alphabetical Order**: 
+- **User sorts entire list by Alphabetical Order**:
   - `list -a`
   - Will list the entire contact list in alphabetical order.
 
@@ -305,40 +309,96 @@ Unpin command follows a similar sequence, replacing `PinCommand` with `UnpinComm
 
 #### Overview
 
-The `find` command helps user quickly locate specific contacts by searching for keywords in their names or tags. It 
-matches any contact where **at least one word** in the name or tag **begins with** a given keyword, making it easy 
+The `find` command helps user quickly locate specific contacts by searching for keywords in their names or tags. It
+matches any contact where **at least one word** in the name or tag **begins with** a given keyword, making it easy
 to filter a large address book for relevant entries.
 
 #### Rationale
 
-As the address books grows, it's common to search for people based on partial names, initials, or tags (like 
-`project` or `family`). Rather than scrolling and scanning, users can use the `find` command to instantly filter the 
+As the address books grows, it's common to search for people based on partial names, initials, or tags (like
+`project` or `family`). Rather than scrolling and scanning, users can use the `find` command to instantly filter the
 list by starting letters or words.
 
 #### Design Considerations
-- **Word-based matching**: The search checks every word in the name or tag: if any word begins with a keyword, that 
+- **Word-based matching**: The search checks every word in the name or tag: if any word begins with a keyword, that
   contact is returned.
-- **Multiple keywords**: When multiple keywords are provided, a contact is included in the results if any of the 
+- **Multiple keywords**: When multiple keywords are provided, a contact is included in the results if any of the
   keywords matches the beginning of any word in the contacts's name or tag (an OR search).
 - **Case-insensitive**: The matching ignores letter case for convenience.
-- **Prefix flags**: Use `n\` for names or `t\` for tags. If both prefixes are provided, only the first prefix and 
+- **Prefix flags**: Use `n\` for names or `t\` for tags. If both prefixes are provided, only the first prefix and
   its keywords are used.
 - **Sorting**: The results are displayed with index numbers for easy follow-up actions.
 
 #### Implementation Details
 - Each name or tag is split into words and checked against all supplied keywords.
-- The search logic determines whether to search names or tags based on the first prefix entered (`n\` for names or 
+- The search logic determines whether to search names or tags based on the first prefix entered (`n\` for names or
   `t\` for tags). Only keywords following this prefix are considered, additional prefixes are ignored.
 - Matches are shown as a numbered list, allowing for follow-up actions like editing or pinning.
 - The command is compatible with all display sorting options: found contacts are listed in the current sorting mode.
 
 #### Example Scenarios
-1. **Find contacts by given name**: `find n\james` returns any contact whose name has a word starting with `james`, 
+1. **Find contacts by given name**: `find n\james` returns any contact whose name has a word starting with `james`,
    like `James Ho` or `John jameson`.
 2. **Find by tag**: `find t\friend` lists all contacts tagged with a word starting with "friend"
 3. **Multiple keywords**: `find n\Alex Ann` finds any contact whose name contains a word starting with "Alex" or "Ann".
 4. **Mixed prefixes**: `find n\Amy t\classmate` searches only for name matches with "Amy", ignoring the tag prefix.
    ![result for find n\Amy t\classmate](images/findAmyClassmateResult.png)
+
+### Autocompletion
+
+#### Overview
+
+The autocomplete feature contributes to the proposed *speed* of DevBooks. It provides users with real-time suggestions
+on which commands to input, improving the user experience by showing users possible commands in-place and allowing
+them to fill it with `<TAB>` when satisfied.
+
+#### Rationale
+
+One of the key goals of DevBooks is speed. Our target users are CS students who are (or will be!) accustomed to
+command line interfaces. As such, we want to provide common features and functionality found in CLIs like bash.
+Therefore, autocomplete was implemented with a similar control scheme to most CLIs.
+
+#### Design Considerations
+- **Familiarity**: The functionality should be familiar for users. Therefore, we used `<TAB>` as the input to autocomplete.
+- **Speed**: Autocomplete suggestions should be fast and have no noticeable delay. This is why a Trie data structure is used for suggestions.
+- **User Experience**: The text that is autocompleted should be obvious to the user before even pressing `<TAB>`. This is why DevBooks shows the text that would be autocompleted in-place as the user types.
+
+#### Implementation Details
+
+![Interactions between UI and autocomplete](images/AutocompleteSequenceDiagram.png)
+
+The general flow of autocompletion is shown above.
+
+Other notes:
+* The UI component holds a reference to an Autocompletor object, which when created populates a `Trie` with command words obtained from the `CommandRegistry`
+* Pressing `<TAB>` updates the `CommandBox` with the hint text that is currently being shown to the user.<br>
+Note that another call to the `Autocompletor` is **not** made, to prevent situations where the autocompleted text does not match with the hint that is shown to the user.
+* The Trie is adapted from [Princeton's TrieST](https://algs4.cs.princeton.edu/52trie/) implementation, and contains a subset of features. For more information on how Tries work, [see here](https://en.wikipedia.org/wiki/Trie).
+
+### Command History
+
+#### Overview
+
+Similar to autocomplete, the command history feature intends to speed up the use of DevBooks. It allows users to
+access the 15 latest successful commands that they have inputted by using the arrow keys.
+
+#### Design Considerations
+- **Familiarity**: Arrow keys are a common way to access command history in CLIs.
+- **User Experience**: Only saves successful commands to prevent filling history with irrelevant data.<br>
+DevBooks leaves inputs as-is on failed commands. This allows users to edit their input, preventing the need for saving failed commands.
+
+#### Implementation Details
+
+![Interactions between UI and CommandHistory](images/CommandHistorySequenceDiagram.png)
+
+The general flow of saving and using command history is shown above.
+
+Other notes:
+* The `ReadOnlyCommandHistory` is exposed to logic via the `ModelManager`. However, the UI holds a direct reference to `ReadOnlyCommandHistory`.<br>
+This was done so as to maintain the low level of coupling that UI has to other components. In the event that UI becomes more dependent on model, consider passing the ModelManager to UI and using the manager to interface with the model.
+* `ReadOnlyCommandHistory` is passed into the UI manager via the constructor called in `MainApp.java`, similar to how the other architecture component managers are passed. This allows the UI to maintain a safe, updated, read-only view of the CommandHistory.
+* Obtaining the previous command in the history requires a string parameter, the current text in the command box. This is so that the command being typed by the user can be re-attained by scrolling back down, like in other CLIs.
+* The `CommandHistory` is saved to disk in a newline-delimited manner. This is a simple format that is easy to encode and decode. It fits our requirements, since commands are strictly one line only.
 
 ### Launch Communication Mode
 
@@ -349,7 +409,7 @@ use an Operating System specific command to launch the browser. If that fails, i
 as a fallback operation. Finally, it will display a success/failure message based on the result of the launch operation.
 
 #### Rationale
-This feature adds significant value to Devbooks by streamlining the user's workflows by reducing context switching.
+This feature adds significant value to DevBooks by streamlining the user's workflows by reducing context switching.
 Instead of manually copying and pasting contact information such as telegram handles or GitHub usernames into external
 browsers, users can instantly launch the appropriate communication channel directly from within the app.
 
@@ -357,12 +417,12 @@ browsers, users can instantly launch the appropriate communication channel direc
 
 - **Operating System Specific Commands**: As not all operating systems support Java's Desktop API library, when
   launching, the application will first attempt to use system specific commands to attempt to launch the specific
-  communication mode through the web browser. This ensures that, even when using a device without the support the 
+  communication mode through the web browser. This ensures that, even when using a device without the support the
   Java's Desktop API library, that users are still able to use this feature.
 
 - **Cross-Platform Compatibility**: Different platforms (Windows, macOS, Linux) may require distinct command syntaxes
-  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux 
-  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand 
+  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux
+  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand
   interface to function consistently across platforms.
 
 - **Fallback launch mechanism**: This ensures that if operating system–specific commands fail (for example, due to
@@ -377,35 +437,35 @@ browsers, users can instantly launch the appropriate communication channel direc
 
 #### Implementation Details
 
-- **Util Classes**: 
+- **Util Classes**:
   - `ApplicationLinkLauncher`: encapsulates all logic related to preparing the links such that it will be ready
     to be launched by the `DesktopApi` class.
   - `ApplicationLinkResult`: Stores the status and resulting message of the launched application. It will be used to
     inform the user of the success/failure of the operation.
   - `ApplicationType`: Enumeration of all the different types of application types that DevBooks can launch.
   - `DesktopApi`: Supports cross-platform Launching by first attempting to launch the using system specific commands,
-    before using Java's Desktop API as a fallback. This class is credited in the 
+    before using Java's Desktop API as a fallback. This class is credited in the
     [acknowledgement section](#acknowledgements) to the original creator of the code.
 
 - **GUI enabled ability to launch**:
-  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger 
-    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact 
+  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger
+    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact
     detail and calls the relevant `ApplicationLinkLauncher` method.
     ![UiLaunchTelegramSequenceDiagram](images/UiLaunchTelegramSequenceDiagram.png)
 
 #### Example Scenarios
 
 1. **Launch Telegram** for **first** Person in displayed list: `launch 1 -l`
-   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
+   - DevBooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
      specific send message to a Telegram user URL)
 
 2. **Launch GitHub** for **second** Person in displayed list: `launch 2 -g`
-   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
+   - DevBooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
      default GitHub page of the specified username)
 
 3. **Launch UserGuide**: Press the **F1** key
-   - Devbooks will attempt to launch a browser with the URL in the format formatted 
-     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
+   - DevBooks will attempt to launch a browser with the URL in the format formatted
+     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of DevBook's user guide)
 
 - **Note**: Kindly check if the URL is correct when evaluating this feature
     ![result for `launch 1 -g`](images/alexYeohGitHub.png)
@@ -493,15 +553,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Use cases
 
-(For all use cases below, the **System** is the `Devbooks` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `DevBooks` and the **Actor** is the `user`, unless specified otherwise)
 
 **Use case: UC01 - Add Contact**
 
 **MSS**
 
 1. User add contact with required contact information
-2. Devbooks saves contact and show success message
-3. Devbooks shows the updated contact list
+2. DevBooks saves contact and show success message
+3. DevBooks shows the updated contact list
 
     Use case ends.
 
@@ -509,7 +569,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1a. User add contact with invalid contact information
 
-    * 1a1. Devbooks shows an error message
+    * 1a1. DevBooks shows an error message
     * 1a2. User input new add command with contact information
 
       Steps 1a1-1a2 are repeated until the new contact information entered are correct.
@@ -518,8 +578,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1b. Duplicated contact information found
 
-    * 1b1. Devbooks shows an error message
-    * 1b2. User add a contact with different contact name
+    * 1b1. DevBooks shows an error message
+    * 1b2. User input new add command with contact information
 
       Steps 1b1-1b2 are repeated until the new contact information does not duplicate with existing contacts.
 
@@ -531,16 +591,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User edits contact in list
-2.  Devbooks detects correct data in the entered data
-3.  Devbooks updates the contact and displays the newly updated contact
+2.  DevBooks detects correct data in the entered data
+3.  DevBooks updates the contact and displays the newly updated contact
 
     Use case ends.
 
 **Extensions**
 
-* 1a. Devbooks detects an error in the entered data.
+* 1a. DevBooks detects an error in the entered data.
 
-    * 1a1. Devbooks prompts the user for the correct data.
+    * 1a1. DevBooks prompts the user for the correct data.
     * 1a2. Beginner user enters new data.
 
       Steps 1a1-1a2 are repeated until the data entered are correct.
@@ -553,23 +613,23 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs delete command with desired information to delete
-2.  Devbooks shows a confirmation prompt
+2.  DevBooks shows a confirmation prompt
 3.  User confirms intent to delete
-4.  Devbooks deletes the contact
+4.  DevBooks deletes the contact
     Use case ends.
 
 **Extensions**
 
-* 1a. Devbooks does not find a corresponding user to delete
+* 1a. DevBooks does not find a corresponding user to delete
 
-    * 1a1. Devbooks shows an error message
+    * 1a1. DevBooks shows an error message
 
       Use case ends.
 
 * 3a. User inputs an invalid confirmation prompt
 
-    * 3a1. Devbooks shows an error message
-    * 3a2. Devbooks re-prompts for confirmation
+    * 3a1. DevBooks shows an error message
+    * 3a2. DevBooks re-prompts for confirmation
 
       Steps 3a1-3a2 are repeated until the data entered are correct.
 
@@ -581,9 +641,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs a help command to look up all commands available
-2.  Devbooks lists out all the commands with its uses
+2.  DevBooks lists out all the commands with its uses
 3.  User chooses specific help commands to look up details of one specific command.
-4.  Devbooks shows the specific instructions and guide on how to use that command
+4.  DevBooks shows the specific instructions and guide on how to use that command
 
     Use case ends.
 
@@ -595,8 +655,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 3b. User inputs a commands that does not exist in list of commands
 
-    * 3b1. Devbooks shows an error message
-    * 3b2. Devbooks prompts user to select available command
+    * 3b1. DevBooks shows an error message
+    * 3b2. DevBooks prompts user to select available command
     * 3b3. User selects a command from list of available command
 
   Steps 3b1–3b3 are repeated until available command is selected.
@@ -609,8 +669,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs a find command with keyword(s) to search
-2.  Devbooks validates the input and searches for matching contacts
-3.  Devbooks displays the matching contacts
+2.  DevBooks validates the input and searches for matching contacts
+3.  DevBooks displays the matching contacts
 
     Use case ends.
 
@@ -618,7 +678,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User inputs an invalid search format
 
-    * 2a1. Devbooks shows an error message
+    * 2a1. DevBooks shows an error message
 
         Use case ends.
 
@@ -628,8 +688,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User inputs the pin command with a valid contact index
-2. Devbooks marks the contact as pinned and updates its position in the contact list
-3. Devbooks shows a success message and displays the updated list with pinned contact(s) at the top
+2. DevBooks marks the contact as pinned and updates its position in the contact list
+3. DevBooks shows a success message and displays the updated list with pinned contact(s) at the top
 
    Use case ends.
 
@@ -637,7 +697,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1a. User inputs pin command with an invalid contact index
 
-    * 1a1. Devbooks shows an error message
+    * 1a1. DevBooks shows an error message
     * 1a2. User inputs a new pin command with a valid contact index
 
       Steps 1a1-1a2 are repeated until a valid contact index is entered.
@@ -645,7 +705,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1b. Selected contact is already pinned
 
-    * 1b1. Devbooks shows a message indicating that the contact is already pinned
+    * 1b1. DevBooks shows a message indicating that the contact is already pinned
       Use case ends.
 
 
@@ -654,8 +714,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User inputs the unpin command with a valid contact index
-2. Devbooks removes the pin from the selected contact and updates the contact list order
-3. Devbooks shows a success message and displays the updated list
+2. DevBooks removes the pin from the selected contact and updates the contact list order
+3. DevBooks shows a success message and displays the updated list
 
    Use case ends.
 
@@ -663,7 +723,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1a. User inputs unpin command with an invalid contact index
 
-    * 1a1. Devbooks shows an error message
+    * 1a1. DevBooks shows an error message
     * 1a2. User inputs a new unpin command with a valid contact index
 
       Steps 1a1-1a2 are repeated until a valid contact index is entered.
@@ -671,7 +731,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1b. Selected contact is not pinned
 
-    * 1b1. Devbooks shows a message indicating that the contact is not pinned
+    * 1b1. DevBooks shows a message indicating that the contact is not pinned
       Use case ends.
 
 
@@ -680,9 +740,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User inputs the delete tag command with one or more tags to delete
-2. Devbooks deletes all instances of the found tags from every contact
-3. Devbooks shows a success message indicating which tags were deleted
-4. Devbooks displays the updated contact list
+2. DevBooks deletes all instances of the found tags from every contact
+3. DevBooks shows a success message indicating which tags were deleted
+4. DevBooks displays the updated contact list
 
    Use case ends.
 
@@ -690,18 +750,18 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1a. User did not specify any tags to delete
 
-    * 1a1. Devbooks shows an error message indicating that no target tag was provided
+    * 1a1. DevBooks shows an error message indicating that no target tag was provided
       Use case ends.
 
 * 1b. None of the specified tags can be found in any contact
 
-    * 1b1. Devbooks shows an error message indicating that no tags were found for deletion
+    * 1b1. DevBooks shows an error message indicating that no tags were found for deletion
       Use case ends.
 
 * 1c. Some tags are found while others are not
 
-    * 1c1. Devbooks deletes all found tags
-    * 1c2. Devbooks shows a success message for tags deleted and a warning message for tags not found
+    * 1c1. DevBooks deletes all found tags
+    * 1c2. DevBooks shows a success message for tags deleted and a warning message for tags not found
       Use case resumes from step 4.
 
 
@@ -739,7 +799,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **NUS SOC**: National University of Singapore, School of Computing
 * **Preferred Mode of communication**: Telegram, Email or Phone
-* **Prefix**: A marker used to specify a particular field or value in a command. (e.g. `n\` for names, `p\` for 
+* **Prefix**: A marker used to specify a particular field or value in a command. (e.g. `n\` for names, `p\` for
   phone, `t\` for tag, etc).
 * **Private contact detail**: A contact detail that is not meant to be shared with others
 * **Scroll Mode**: A mode that disables text input and allow users to navigate through the interface using keyboard
@@ -844,7 +904,7 @@ testers are expected to do more *exploratory* testing.
 
    3. Test case: `pin John`<br>
       Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use pin is shown in the Result Display.
-   
+
    4. Test case: `pin 3` followed by `pin 1` to pin an already pinned contact <br>
       Expected: The message "Person is already pinned." is shown to the user.
 
@@ -972,8 +1032,8 @@ testers are expected to do more *exploratory* testing.
         Launched TELEGRAM successfully.
       Note: You can only launch Telegram links from the browser if you have the Telegram application installed on your device.
         ```
-      Expected Result (regardless of Internet Access): 
-      1. Verify that a browser opens with the URL formatted `https://t.me/HANDLE` whereby handle should be the specified contact's Telegram handle, 
+      Expected Result (regardless of Internet Access):
+      1. Verify that a browser opens with the URL formatted `https://t.me/HANDLE` whereby handle should be the specified contact's Telegram handle,
       2. & Result display show the success message above.
 
 2. Launch Second Person's without the specified communication mode.
@@ -984,7 +1044,7 @@ testers are expected to do more *exploratory* testing.
        ```
       Person Name This person does not have a Telegram handle.
        ```
-      Expected Result: 
+      Expected Result:
       1. Result display show the message of the contact's name followed by the error message above
 
 3. Launch Third Person's GitHub.
@@ -1007,7 +1067,7 @@ testers are expected to do more *exploratory* testing.
        Launched USERGUIDE successfully.
        Note: You can only launch Telegram links from the browser if you have the Telegram application installed on your device.
        ```
-      Expected Result: 
+      Expected Result:
       1. Verify that a browser opens with the specific URL `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html`,
       2. and Result display show the success message above as well as a caveat about launching Telegram
 
@@ -1034,11 +1094,58 @@ testers are expected to do more *exploratory* testing.
    Expected Result: Error Message displaying that No Person is found using the target tag.
 
 3. Deleting Tags for all Users (Given the target tag **does exist**)
-   1. Prerequisites: The displayed list has at least 1 person with the target tags
+    1. Prerequisites: The displayed list has at least 1 person with the target tags
 
-   2. Test: `tag -d t\CS1101 t\CS2103` <br>
-       Expected Result Display:
-      ```
-      Deleted tags: [[CS1101], [CS2103]]
-      ```
-      Expected Output deletes `CS1101` & `CS2103` tag for all contacts with the tag.
+    2. Test: `tag -d t\CS1101 t\CS2103` <br>
+    Expected Result Display:
+    ```
+    Deleted tags: [[CS1101], [CS2103]]
+    ```
+    Expected Output deletes `CS1101` & `CS2103` tag for all contacts with the tag.
+
+<div style = "page-break-after:always;"></div>
+
+## Appendix: Effort
+
+Overall, our effort placed into the project as a group is higher-than-average. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
+
+While core functionality remains similar, we have made tweaks and added commands targeted at our users, NUS CS students.
+
+The following section details a person-by-person breakdown on key challenges we've faced and successes we've achieved.
+
+### Wen Cong
+My efforts focused on enhancing the contact model and implementing new management features. I enhanced existing contacts to support new fields like Telegram and Github, which was time-consuming as it required updates across multiple commands and the model.
+
+I also implemented new features, including Mass Delete Tags and Pin/Unpin contacts. The most significant challenge was developing the sorting algorithm for the Pin/Unpin feature, which needed to display pinned contacts at the top while preserving the existing sort order for all unpinned contacts.
+
+LoCs added so far: 3097
+Estimated time spent: 60+ hours
+
+### Arjun
+
+I've successfully transformed user interaction with DevBooks by making it keyboard-centric, incorporating features like autocomplete and command history for improved speed. Implementing autocomplete was straightforward with a trie addition, while integrating deletion confirmation required significant design deliberation and adherence to best practices, supported by UML diagrams. However, I faced challenges integrating TestFX into the testing suite, needing to troubleshoot numerous obscure error messages to update the CI effectively.
+
+LoCs added so far: 2953
+Estimated time spent: 60+ hours
+
+### Thaddaeus
+My key successes were a mix of enhancing current features while also implementing new features aimed towards streamlining workflows. Features I’ve enhanced/added include: updating edit, sorting list, rename tag, launching of communication mode and introducing Mockito as a test dependency.
+
+The biggest challenge was supporting Linux systems, as not all distributions support Java’s Desktop API. This was addressed by using [OS-specific commands first, with Java’s Desktop API as a fallback](#design-considerations-3).
+
+LoCs added so far: 3096
+Estimated time spent: 60+ hours
+
+### Daohang
+My key successes were enhancing the help command while also implementing the new export feature. My key challenge faced was when creating the export feature, and figuring out the best way to route and design the control flow of the feature. This was eventually resolved through multiple stages of improving the implementation.
+
+LoCs added so far: 2958
+Estimated time spent: 50+ hours
+
+### Derek
+My key successes are in improving the Find command, enabling search by name or tag with more accurate matching, and enhancing the Edit Preferred Mode of Communication, ensuring correct updates, validation, and clear UI highlighting.
+
+For the Edit Preferred Mode of Communication, I worked on ensuring the preferred mode updates correctly based on the user’s available contact options. Setting and validating the available modes was tricky, as it required careful checks to prevent invalid combinations. I also faced challenges in styling, ensuring only the preferred mode text was highlighted in color while keeping the rest consistent, but achieved a clean and clear display in the end.
+
+LoCs added so far: 1743
+Estimated time spent: 50

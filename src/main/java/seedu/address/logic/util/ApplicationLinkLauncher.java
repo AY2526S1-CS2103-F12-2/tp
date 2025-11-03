@@ -57,7 +57,7 @@ public class ApplicationLinkLauncher {
     }
 
     /**
-     * Launches the user guide of Devbooks.
+     * Launches the user guide of DevBooks.
      *
      * @return The result of the launch attempt.
      */

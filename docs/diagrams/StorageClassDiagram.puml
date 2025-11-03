@@ -13,6 +13,7 @@ Class JsonUserPrefsStorage
 
 Class "<<interface>>\nStorage" as Storage
 Class StorageManager
+Class "CsvAddressBookStorage" as CsvAddressBookStorage
 
 package "AddressBook Storage" #F4F6F6{
 Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
@@ -22,22 +23,37 @@ Class JsonAdaptedPerson
 Class JsonAdaptedTag
 }
 
+package "Command History Storage\n" #F4F6F6{
+Class "<<interface>>\nCommandHistoryStorage" as CommandHistoryStorage
+Class "NewlineDelimitedCommandHistoryStorage" as NDCHS
+}
+
 }
 
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
+Class HiddenOutsideOther #FFFFFF
+HiddenOutsideOther ..> CsvAddressBookStorage
+
 StorageManager .up.|> Storage
 StorageManager -up-> "1" UserPrefsStorage
 StorageManager -up-> "1" AddressBookStorage
+StorageManager --> "1" CommandHistoryStorage
 
 Storage -left-|> UserPrefsStorage
 Storage -right-|> AddressBookStorage
+Storage --|> CommandHistoryStorage
 
 JsonUserPrefsStorage .up.|> UserPrefsStorage
+
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedPerson
 JsonAdaptedPerson --> "*" JsonAdaptedTag
+
+CsvAddressBookStorage ..left> AddressBookStorage
+
+NDCHS -.up|> CommandHistoryStorage
 
 @enduml
