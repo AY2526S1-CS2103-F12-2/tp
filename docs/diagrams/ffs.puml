@@ -1,8 +1,0 @@
-@startuml
-'https://plantuml.com/sequence-diagram
-
-alt "retval == 0"
-    ":p" -> ":q"
-else ""
-    ":p" -> ":q"
-@enduml
