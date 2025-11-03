@@ -285,20 +285,20 @@ list by starting letters or words.
 
 #### Overview
 
-The autocomplete feature contributes to the proposed *speed* of Devbooks. It provides users with real-time suggestions
+The autocomplete feature contributes to the proposed *speed* of DevBooks. It provides users with real-time suggestions
 on which commands to input, improving the user experience by showing users possible commands in-place and allowing
 them to fill it with `<TAB>` when satisfied.
 
 #### Rationale
 
-One of the key goals of Devbooks is speed. Our target users are CS students who are (or will be!) accustomed to 
+One of the key goals of DevBooks is speed. Our target users are CS students who are (or will be!) accustomed to 
 command line interfaces. As such, we want to provide common features and functionality found in CLIs like bash.
 Therefore, autocomplete was implemented with a similar control scheme to most CLIs.
 
 #### Design Considerations
 - **Familiarity**: The functionality should be familiar for users. Therefore, we used `<TAB>` as the input to autocomplete.
 - **Speed**: Autocomplete suggestions should be fast and have no noticeable delay. This is why a Trie data structure is used for suggestions.
-- **User Experience**: The text that is autocompleted should be obvious to the user before even pressing `<TAB>`. This is why Devbooks shows the text that would be autocompleted in-place as the user types.
+- **User Experience**: The text that is autocompleted should be obvious to the user before even pressing `<TAB>`. This is why DevBooks shows the text that would be autocompleted in-place as the user types.
 
 #### Implementation Details
 
@@ -316,13 +316,13 @@ Note that another call to the `Autocompletor` is **not** made, to prevent situat
 
 #### Overview
 
-Similar to autocomplete, the command history feature intends to speed up the use of Devbooks. It allows users to
+Similar to autocomplete, the command history feature intends to speed up the use of DevBooks. It allows users to
 access the 15 latest successful commands that they have inputted by using the arrow keys.
 
 #### Design Considerations
 - **Familiarity**: Arrow keys are a common way to access command history in CLIs.
 - **User Experience**: Only saves successful commands to prevent filling history with irrelevant data.<br>
-Devbooks leaves inputs as-is on failed commands. This allows users to edit their input, preventing the need for saving failed commands.
+DevBooks leaves inputs as-is on failed commands. This allows users to edit their input, preventing the need for saving failed commands.
 
 #### Implementation Details
 
@@ -421,16 +421,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Use cases
 
-(For all use cases below, the **System** is the `Devbooks` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `DevBooks` and the **Actor** is the `user`, unless specified otherwise)
 
 **Use case: UC01 - Add Contact**
 
 **MSS**
 
-1.  Devbooks prompts for command
+1.  DevBooks prompts for command
 2.  User input add command with required contact information
-3.  Devbooks saves contact and show success message
-4.  Devbooks shows the updated contact list
+3.  DevBooks saves contact and show success message
+4.  DevBooks shows the updated contact list
 
     Use case ends.
 
@@ -438,7 +438,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User input add command with invalid contact information
 
-    * 2a1. Devbooks shows an error message
+    * 2a1. DevBooks shows an error message
     * 2a2. User input new add command with contact information
 
       Steps 2a1-2a2 are repeated until the add command and contact information entered are correct.
@@ -447,7 +447,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2b. Duplicated contact information found
 
-    * 2b1. Devbooks shows an error message
+    * 2b1. DevBooks shows an error message
     * 2b2. User input new add command with contact information
 
       Steps 2b1-2b2 are repeated until the new contact information does not duplicate with existing contacts.
@@ -460,16 +460,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User edits contact in list
-2.  Devbooks detects correct data in the entered data
-3.  Devbooks updates the contact and displays the newly updated contact
+2.  DevBooks detects correct data in the entered data
+3.  DevBooks updates the contact and displays the newly updated contact
 
     Use case ends.
 
 **Extensions**
 
-* 1a. Devbooks detects an error in the entered data.
+* 1a. DevBooks detects an error in the entered data.
 
-    * 1a1. Devbooks prompts the user for the correct data.
+    * 1a1. DevBooks prompts the user for the correct data.
     * 1a2. Beginner user enters new data.
 
       Steps 1a1-1a2 are repeated until the data entered are correct.
@@ -482,23 +482,23 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs delete command with desired information to delete
-2.  Devbooks shows a confirmation prompt
+2.  DevBooks shows a confirmation prompt
 3.  User confirms intent to delete
-4.  Devbooks deletes the contact
+4.  DevBooks deletes the contact
     Use case ends.
 
 **Extensions**
 
-* 1a. Devbooks does not find a corresponding user to delete
+* 1a. DevBooks does not find a corresponding user to delete
 
-    * 1a1. Devbooks shows an error message
+    * 1a1. DevBooks shows an error message
 
       Use case ends.
 
 * 3a. User inputs an invalid confirmation prompt
 
-    * 3a1. Devbooks shows an error message
-    * 3a2. Devbooks re-prompts for confirmation
+    * 3a1. DevBooks shows an error message
+    * 3a2. DevBooks re-prompts for confirmation
 
       Steps 3a1-3a2 are repeated until the data entered are correct.
 
@@ -510,10 +510,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs a help command to look up all commands available
-2.  Devbooks lists out all the commands with its uses
-3.  Devbooks prompts the user to select an available command for more details
+2.  DevBooks lists out all the commands with its uses
+3.  DevBooks prompts the user to select an available command for more details
 4.  User chooses specific help commands to look up details of one specific command.
-5.  Devbooks shows the specific instructions and guide on how to use that command
+5.  DevBooks shows the specific instructions and guide on how to use that command
 
     Use case ends.
 
@@ -525,8 +525,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 4a. User inputs a commands that does not exist in list of commands
 
-    * 4a1. Devbooks shows an error message
-    * 4a2. Devbooks prompts user to select available command
+    * 4a1. DevBooks shows an error message
+    * 4a2. DevBooks prompts user to select available command
     * 4a3. User selects a command from list of available command
 
   Steps 4a1–4a3 are repeated until available command is selected.
@@ -539,8 +539,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  User inputs a find command with keyword(s) to search
-2.  Devbooks validates the input and searches for matching contacts
-3.  Devbooks displays the matching contacts
+2.  DevBooks validates the input and searches for matching contacts
+3.  DevBooks displays the matching contacts
 
     Use case ends.
 
@@ -548,7 +548,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User inputs an invalid search format
 
-    * 2a1. Devbooks shows an error message
+    * 2a1. DevBooks shows an error message
 
         Use case ends.
 
@@ -557,10 +557,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. Devbooks prompts for command
+1. DevBooks prompts for command
 2. User inputs the pin command with a valid contact index
-3. Devbooks marks the contact as pinned and updates its position in the contact list
-4. Devbooks shows a success message and displays the updated list with pinned contact(s) at the top
+3. DevBooks marks the contact as pinned and updates its position in the contact list
+4. DevBooks shows a success message and displays the updated list with pinned contact(s) at the top
 
    Use case ends.
 
@@ -568,7 +568,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User inputs pin command with an invalid contact index
 
-    * 2a1. Devbooks shows an error message
+    * 2a1. DevBooks shows an error message
     * 2a2. User inputs a new pin command with a valid contact index
 
       Steps 2a1-2a2 are repeated until a valid contact index is entered.
@@ -576,7 +576,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2b. Selected contact is already pinned
 
-    * 2b1. Devbooks shows a message indicating that the contact is already pinned
+    * 2b1. DevBooks shows a message indicating that the contact is already pinned
       Use case ends.
 
 
@@ -584,10 +584,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. Devbooks prompts for command
+1. DevBooks prompts for command
 2. User inputs the unpin command with a valid contact index
-3. Devbooks removes the pin from the selected contact and updates the contact list order
-4. Devbooks shows a success message and displays the updated list
+3. DevBooks removes the pin from the selected contact and updates the contact list order
+4. DevBooks shows a success message and displays the updated list
 
    Use case ends.
 
@@ -595,7 +595,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User inputs unpin command with an invalid contact index
 
-    * 2a1. Devbooks shows an error message
+    * 2a1. DevBooks shows an error message
     * 2a2. User inputs a new unpin command with a valid contact index
 
       Steps 2a1-2a2 are repeated until a valid contact index is entered.
@@ -603,7 +603,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2b. Selected contact is not pinned
 
-    * 2b1. Devbooks shows a message indicating that the contact is not pinned
+    * 2b1. DevBooks shows a message indicating that the contact is not pinned
       Use case ends.
 
 
@@ -611,11 +611,11 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. Devbooks prompts for command
+1. DevBooks prompts for command
 2. User inputs the delete tag command with one or more tags to delete
-3. Devbooks deletes all instances of the found tags from every contact
-4. Devbooks shows a success message indicating which tags were deleted
-5. Devbooks displays the updated contact list
+3. DevBooks deletes all instances of the found tags from every contact
+4. DevBooks shows a success message indicating which tags were deleted
+5. DevBooks displays the updated contact list
 
    Use case ends.
 
@@ -623,18 +623,18 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 2a. User did not specify any tags to delete
 
-    * 2a1. Devbooks shows an error message indicating that no target tag was provided
+    * 2a1. DevBooks shows an error message indicating that no target tag was provided
       Use case ends.
 
 * 2b. None of the specified tags can be found in any contact
 
-    * 2b1. Devbooks shows an error message indicating that no tags were found for deletion
+    * 2b1. DevBooks shows an error message indicating that no tags were found for deletion
       Use case ends.
 
 * 2c. Some tags are found while others are not
 
-    * 2c1. Devbooks deletes all found tags
-    * 2c2. Devbooks shows a success message for tags deleted and a warning message for tags not found
+    * 2c1. DevBooks deletes all found tags
+    * 2c2. DevBooks shows a success message for tags deleted and a warning message for tags not found
       Use case resumes from step 5.
 
 
