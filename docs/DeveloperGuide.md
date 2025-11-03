@@ -509,7 +509,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 1.  User inputs a help command to look up all commands available
 2.  Devbooks lists out all the commands with its uses
 3.  User chooses specific help commands to look up details of one specific command.
-5.  Devbooks shows the specific instructions and guide on how to use that command
+4.  Devbooks shows the specific instructions and guide on how to use that command
 
     Use case ends.
 
