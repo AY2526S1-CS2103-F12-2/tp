@@ -108,6 +108,8 @@ The `UI` component,
 * depends on the `Autocompletor` in `Logic` to provide suggestions while the user is typing.
 * Keeps a reference to a `ReadOnlyCommandHistory` for use in accessing command history in the `CommandBox`
 
+<div style="page-break-after: always;"></div>
+
 ### Logic component
 
 **API** : [`Logic.java`](https://github.com/AY2526S1-CS2103-F12-2/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
@@ -1132,34 +1134,34 @@ My efforts focused on enhancing the contact model and implementing new managemen
 
 I also implemented new features, including Mass Delete Tags and Pin/Unpin contacts. The most significant challenge was developing the sorting algorithm for the Pin/Unpin feature, which needed to display pinned contacts at the top while preserving the existing sort order for all unpinned contacts.
 
-LoCs added so far: 3097
-Estimated time spent: 60+ hours
+- LoCs added so far: 3097
+- Estimated time spent: 60+ hours
 
 ### Arjun
 
 I've successfully transformed user interaction with DevBooks by making it keyboard-centric, incorporating features like autocomplete and command history for improved speed. Implementing autocomplete was straightforward with a trie addition, while integrating deletion confirmation required significant design deliberation and adherence to best practices, supported by UML diagrams. However, I faced challenges integrating TestFX into the testing suite, needing to troubleshoot numerous obscure error messages to update the CI effectively.
 
-LoCs added so far: 2953
-Estimated time spent: 60+ hours
+- LoCs added so far: 2953
+- Estimated time spent: 60+ hours
 
 ### Thaddaeus
 My key successes were a mix of enhancing current features while also implementing new features aimed towards streamlining workflows. Features I’ve enhanced/added include: updating edit, sorting list, rename tag, launching of communication mode and introducing Mockito as a test dependency.
 
 The biggest challenge was supporting Linux systems, as not all distributions support Java’s Desktop API. This was addressed by using [OS-specific commands first, with Java’s Desktop API as a fallback](#design-considerations-3).
 
-LoCs added so far: 3096
-Estimated time spent: 60+ hours
+- LoCs added so far: 3096
+- Estimated time spent: 60+ hours
 
 ### Daohang
 My key successes were enhancing the help command while also implementing the new export feature. My key challenge faced was when creating the export feature, and figuring out the best way to route and design the control flow of the feature. This was eventually resolved through multiple stages of improving the implementation.
 
-LoCs added so far: 2958
-Estimated time spent: 50+ hours
+- LoCs added so far: 2958
+- Estimated time spent: 50+ hours
 
 ### Derek
 My key successes are in improving the Find command, enabling search by name or tag with more accurate matching, and enhancing the Edit Preferred Mode of Communication, ensuring correct updates, validation, and clear UI highlighting.
 
 For the Edit Preferred Mode of Communication, I worked on ensuring the preferred mode updates correctly based on the user’s available contact options. Setting and validating the available modes was tricky, as it required careful checks to prevent invalid combinations. I also faced challenges in styling, ensuring only the preferred mode text was highlighted in color while keeping the rest consistent, but achieved a clean and clear display in the end.
 
-LoCs added so far: 1743
-Estimated time spent: 50
+- LoCs added so far: 1743
+- Estimated time spent: 50
