@@ -286,6 +286,10 @@ The unpin command restores a contact to its normal position in the list.
 - **Sorting Integration**: The feature is compatible with existing sorting options (e.g., name sort or recency sort). When the user applies any sort, the pin order is reapplied afterward to maintain consistency.
 
 #### Implementation Details
+
+![pin sequence diagram](images/PinSequenceDiagram.png)
+Unpin command follows a similar sequence, replacing `PinCommand` with `UnpinCommand`, and `pin()` with `unpin()`.
+
 - Each contact has an additional field indicating whether it is pinned, along with a timestamp representing when it was pinned.
 - When the list is displayed, a sorting mechanism ensures that all pinned contacts are moved to the top, preserving the order of all other entries.
 - The pin and unpin commands update the relevant contact and trigger a list refresh to reflect the new state immediately.
