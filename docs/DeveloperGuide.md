@@ -340,6 +340,76 @@ list by starting letters or words.
 4. **Mixed prefixes**: `find n\Amy t\classmate` searches only for name matches with "Amy", ignoring the tag prefix.
    ![result for find n\Amy t\classmate](images/findAmyClassmateResult.png)
 
+### Launch Communication Mode
+
+#### Overview
+
+The `launch` command helps users launch the selected communication for the specified contact. It will attempt to first
+use an Operating System specific command to launch the browser. If that fails, it will then resort to the Java Desktop API
+as a fallback operation. Finally, it will display a success/failure message based on the result of the launch operation.
+
+#### Rationale
+This feature adds significant value to Devbooks by streamlining the user's workflows by reducing context switching.
+Instead of manually copying and pasting contact information such as telegram handles or GitHub usernames into external
+browsers, users can instantly launch the appropriate communication channel directly from within the app.
+
+#### Design Considerations
+
+- **Operating System Specific Commands**: As not all operating systems support Java's Desktop API library, when
+  launching, the application will first attempt to use system specific commands to attempt to launch the specific
+  communication mode through the web browser. This ensures that, even when using a device without the support the 
+  Java's Desktop API library, that users are still able to use this feature.
+
+- **Cross-Platform Compatibility**: Different platforms (Windows, macOS, Linux) may require distinct command syntaxes
+  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux 
+  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand 
+  interface to function consistently across platforms.
+
+- **Fallback launch mechanism**: This ensures that if operating system–specific commands fail (for example, due to
+  missing environment variables, restricted permissions, or unsupported shells), the application will attempt a
+  secondary launch strategy using Java's built-in `Desktop` API. If this also fails, the application will gracefully
+  inform the user of the issue instead of crashing. This layered fallback mechanism enhances robustness and user
+  experience by preventing silent failures.
+
+- **Browser Specific Implementation**: The launch command only allows launches of browsers (i.e. no use of system
+  specific clients). This ensures that, during testing, even without internet connection, users can still verify the URL
+  of the web page for confirmation if the launch command has worked successfully or not.
+
+#### Implementation Details
+
+- **Util Classes**: 
+  - `ApplicationLinkLauncher`: encapsulates all logic related to preparing the links such that it will be ready
+    to be launched by the `DesktopApi` class.
+  - `ApplicationLinkResult`: Stores the status and resulting message of the launched application. It will be used to
+    inform the user of the success/failure of the operation.
+  - `ApplicationType`: Enumeration of all the different types of application types that DevBooks can launch.
+  - `DesktopApi`: Supports cross-platform Launching by first attempting to launch the using system specific commands,
+    before using Java's Desktop API as a fallback. This class is credited in the 
+    [acknowledgement section](#acknowledgements) to the original creator of the code.
+
+- **GUI enabled ability to launch**:
+  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger 
+    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact 
+    detail and calls the relevant `ApplicationLinkLauncher` method.
+    ![UiLaunchTelegramSequenceDiagram](images/UiLaunchTelegramSequenceDiagram.png)
+
+#### Example Scenarios
+
+1. **Launch Telegram** for **first** Person in displayed list: `launch 1 -l`
+   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
+     specific send message to a Telegram user URL)
+
+2. **Launch GitHub** for **second** Person in displayed list: `launch 2 -g`
+   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
+     default GitHub page of the specified username)
+
+3. **Launch UserGuide**: Press the **F1** key
+   - Devbooks will attempt to launch a browser with the URL in the format formatted 
+     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
+
+- **Note**: Kindly check if the URL is correct when evaluating this feature
+    ![result for `launch 1 -g`](images/alexYeohGitHub.png)
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
