@@ -19,6 +19,8 @@ Third party Libraries Used:
 Credits Adapted ideas:
 * [Cross Platform Launching](https://stackoverflow.com/questions/18004150/desktop-api-is-not-supported-on-the-current-platform)
     * Note: JavaDoc Headers were not provided by the original credited author, but by the developer ([MoshiMoshiMochi](https://github.com/MoshiMoshiMochi)) implementing this. Hence, these documentations may not be exactly what the original author envisioned.
+* Autocomplete: [Trie Data Structure](https://algs4.cs.princeton.edu/52trie/)
+    * Adapted from a symbol table of key-value pairs to a simpler implementation that only intends to check presence of words with prefixes.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -277,6 +279,37 @@ list by starting letters or words.
 3. **Multiple keywords**: `find n\Alex Ann` finds any contact whose name contains a word starting with "Alex" or "Ann".
 4. **Mixed prefixes**: `find n\Amy t\classmate` searches only for name matches with "Amy", ignoring the tag prefix.
    ![result for find n\Amy t\classmate](images/findAmyClassmateResult.png)
+
+### Autocompletion
+
+#### Overview
+
+The autocomplete feature contributes to the proposed *speed* of Devbooks. It provides users with real-time suggestions
+on which commands to input, improving the user experience by showing users possible commands in-place and allowing
+them to fill it with `<TAB>` when satisfied.
+
+#### Rationale
+
+One of the key goals of Devbooks is speed. Our target users are CS students who are (or will be!) accustomed to 
+command line interfaces. As such, we want to provide common features and functionality found in CLIs like bash.
+Therefore, autocomplete was implemented with a similar control scheme to most CLIs.
+
+#### Design Considerations
+- **Familiarity**: The functionality should be familiar for users. Therefore, we used `<TAB>` as the input to autocomplete.
+- **Speed**: Autocomplete suggestions should be fast and have no noticeable delay. This is why a Trie data structure is used for suggestions.
+- **User Experience**: The text that is autocompleted should be obvious to the user before even pressing `<TAB>`. This is why Devbooks shows the text that would be autocompleted in-place as the user types.
+
+#### Implementation Details
+
+![Interactions between UI and autocomplete](images/AutocompleteSequenceDiagram.png)
+
+The general flow of autocompletion is shown above.
+
+Other notes:
+* The UI component holds a reference to an Autocompletor object, which when created populates a `Trie` with command words obtained from the `CommandRegistry`
+* Pressing `<TAB>` updates the `CommandBox` with the hint text that is currently being shown to the user.<br>
+Note that another call to the `Autocompletor` is **not** made, to prevent situations where the autocompleted text does not match with the hint that is shown to the user.
+* The Trie is adapted from [Princeton's TrieST](https://algs4.cs.princeton.edu/52trie/) implementation, and contains a subset of features. For more information on how Tries work, [see here](https://en.wikipedia.org/wiki/Trie). 
 
 --------------------------------------------------------------------------------------------------------------------
 

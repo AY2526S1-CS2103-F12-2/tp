@@ -1,0 +1,46 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+Actor User as user USER_COLOR
+Participant ":UI" as ui UI_COLOR
+
+box Logic LOGIC_COLOR_T1
+participant "a:Autocompletor" as autocompletor LOGIC_COLOR
+participant "t:Trie" as trie LOGIC_COLOR
+end box
+
+user -[USER_COLOR]> ui : "a"
+activate ui UI_COLOR
+
+ui -> autocompletor: getHint("a")
+activate autocompletor LOGIC_COLOR
+
+autocompletor -> trie: getKeysWithPrefix("a")
+activate trie LOGIC_COLOR
+
+trie --> autocompletor: matching commands
+deactivate trie
+
+autocompletor --> ui : "add"
+deactivate autocompletor
+
+ui -> ui: setHintText("add")
+
+ui --> user
+deactivate ui
+
+user -[USER_COLOR]> ui : <TAB>
+activate ui UI_COLOR
+
+ui -> ui: getHintText()
+activate ui UI_COLOR
+
+ui --> ui: "add"
+deactivate ui
+
+ui -> ui: setCommandBoxText("add")
+
+ui --> user
+deactivate ui
+@enduml
