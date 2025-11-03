@@ -1108,28 +1108,41 @@ testers are expected to do more *exploratory* testing.
 
 ## Appendix: Effort
 
-Overall, our effort placed into the project as a group is relatively high. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
+Overall, our effort placed into the project as a group is higher-than-average. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
 
 While core functionality remains similar, we have made tweaks and added commands targeted at our users, NUS CS students.
 
 The following section details a person-by-person breakdown on key challenges we've faced and successes we've achieved.
 
 ### Wen Cong
+My efforts focused on enhancing the contact model and implementing new management features. I enhanced existing contacts to support new fields like Telegram and Github, which was time-consuming as it required updates across multiple commands and the model.
+
+I also implemented new features, including Mass Delete Tags and Pin/Unpin contacts. The most significant challenge was developing the sorting algorithm for the Pin/Unpin feature, which needed to display pinned contacts at the top while preserving the existing sort order for all unpinned contacts.
+
+LoCs added so far: 3097
+Estimated time spent: 60+ hours
 
 ### Arjun
-My key successes are in transforming how the users interface with DevBooks - making it completely keyboard-centric and (I'd like to think!) faster, with features such as autocomplete and command history.
 
-Some features were easier than expected - autocomplete was done by adding a trie with not many changes in flow.
-
-Other changes, like deletion confirmation state, required bigger changes that had to be done with best-practices kept in mind. These changes required deliberating over design choices, until settling on one that balances our requirements. I created UML diagrams to help support decisions when needed as well.
-
-Some of the difficulties I had faced includes adding TestFX to the testing suite. Updating the CI to work with TestFX involved hunting down many obscure error messages, until finding a solution that worked.
+I've successfully transformed user interaction with DevBooks by making it keyboard-centric, incorporating features like autocomplete and command history for improved speed. Implementing autocomplete was straightforward with a trie addition, while integrating deletion confirmation required significant design deliberation and adherence to best practices, supported by UML diagrams. However, I faced challenges integrating TestFX into the testing suite, needing to troubleshoot numerous obscure error messages to update the CI effectively.
 
 LoCs added so far: 2953
 Estimated time spent: 60+ hours
 
 ### Thaddaeus
+My key successes were a mix of enhancing current features while also implementing new features aimed towards streamlining workflows. Features I’ve enhanced/added include: updating edit, sorting list, rename tag, & launching of communication mode.
+
+The biggest challenge was supporting Linux systems, as not all distributions support Java’s Desktop API. This was addressed by using [OS-specific commands first, with Java’s Desktop API as a fallback](#design-considerations-3).
+LoCs added so far: 3096
+Estimated time spent: 60+ hours
 
 ### Daohang
+My key successes were enhancing the help command while also implementing the new export feature. My key challenge faced was when creating the export feature, and figuring out the best way to route and design the control flow of the feature. This was eventually resolved through multiple stages of improving the implementation.
 
 ### Derek
+My key successes are in improving the Find command, enabling search by name or tag with more accurate matching, and enhancing the Edit Preferred Mode of Communication, ensuring correct updates, validation, and clear UI highlighting.
+
+For the Edit Preferred Mode of Communication, I worked on ensuring the preferred mode updates correctly based on the user’s available contact options. Setting and validating the available modes was tricky, as it required careful checks to prevent invalid combinations. I also faced challenges in styling, ensuring only the preferred mode text was highlighted in color while keeping the rest consistent, but achieved a clean and clear display in the end.
+
+LoCs added so far: 1743
+Estimated time spent: 50
