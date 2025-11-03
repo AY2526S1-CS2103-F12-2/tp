@@ -1129,9 +1129,10 @@ LoCs added so far: 2953
 Estimated time spent: 60+ hours
 
 ### Thaddaeus
-My key successes were a mix of enhancing current features while also implementing new features aimed towards streamlining workflows. Features I’ve enhanced/added include: updating edit, sorting list, rename tag, & launching of communication mode.
+My key successes were a mix of enhancing current features while also implementing new features aimed towards streamlining workflows. Features I’ve enhanced/added include: updating edit, sorting list, rename tag, launching of communication mode and introducing Mockito as a test dependency.
 
 The biggest challenge was supporting Linux systems, as not all distributions support Java’s Desktop API. This was addressed by using [OS-specific commands first, with Java’s Desktop API as a fallback](#design-considerations-3).
+
 LoCs added so far: 3096
 Estimated time spent: 60+ hours
 
