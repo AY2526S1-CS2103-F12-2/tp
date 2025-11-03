@@ -17,7 +17,8 @@ public class ApplicationLinkLauncher {
     public static final String MESSAGE_TELEGRAM_NOTE =
             "Note: You can only launch Telegram links from the browser if you have the"
                     + " Telegram application installed on your device.";
-    public static final String MESSAGE_SUCCESS = "Launched %s successfully.\n" + MESSAGE_TELEGRAM_NOTE;
+    public static final String MESSAGE_SUCCESS = "Launched %s successfully.\n";
+    public static final String MESSAGE_SUCCESS_TELEGRAM = MESSAGE_SUCCESS + MESSAGE_TELEGRAM_NOTE;
     public static final String MESSAGE_FAILURE = "Failed to launch %s.";
 
     private static final String MESSAGE_DESKTOP_API_LAUNCH_FAIL = "DesktopAPI failed to open link: %s";
@@ -74,10 +75,22 @@ public class ApplicationLinkLauncher {
     protected static ApplicationLinkResult launchApplicationLink(String link, ApplicationType type) {
         try {
             URI uri = parseToUri(link);
-            openLink(uri);
-            return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS, type));
+            tryOpenWithDesktopApi(uri);
+            return prepareApplicationLinkResult(true, type);
         } catch (URISyntaxException | IOException e) {
+            return prepareApplicationLinkResult(false, type);
+        }
+    }
+
+    private static ApplicationLinkResult prepareApplicationLinkResult(boolean success, ApplicationType type) {
+        if (!success) {
             return new ApplicationLinkResult(false, String.format(MESSAGE_FAILURE, type));
+        }
+
+        if (type.equals(ApplicationType.TELEGRAM)) {
+            return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS_TELEGRAM, type));
+        } else {
+            return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS, type));
         }
     }
 
@@ -86,23 +99,13 @@ public class ApplicationLinkLauncher {
     }
 
     /**
-     * Opens the given URI using the Desktop API, with a fallback for unsupported systems.
-     *
-     * @param uri The URI to be opened.
-     */
-    private static void openLink(URI uri) throws IOException {
-        requireNonNull(uri);
-        tryOpenWithDesktopApi(uri);
-    }
-
-    /**
-     * Fallback method for systems that don't support Desktop API (e.g., Linux).
      * Relying on custom DesktopAPI class to handle link opening.
      *
      * @return <code>true</code> if the link was successfully opened.
      * @throws IOException if both DesktopApi fails to open the link.
      */
     private static void tryOpenWithDesktopApi(URI uri) throws IOException {
+        requireNonNull(uri);
         boolean success = DesktopApi.browse(uri);
         if (!success) {
             String errorMessage = String.format(MESSAGE_DESKTOP_API_LAUNCH_FAIL, uri);

@@ -16,6 +16,11 @@ Third party Libraries Used:
 * [Hamcrest](https://github.com/hamcrest/JavaHamcrest)
 * [Mockito](https://github.com/mockito/mockito)
 
+OpenAI’s ChatGPT (GPT-5) was used by [Derek Qua](https://github.com/Derekqua) to help refine code quality, 
+improve documentation clarity, and verify 
+certain implementation details.
+All AI-generated suggestions were reviewed and adapted to ensure they align with the project’s requirements and coding standards.
+
 Credits Adapted ideas:
 * [Cross Platform Launching](https://stackoverflow.com/questions/18004150/desktop-api-is-not-supported-on-the-current-platform)
     * Note: JavaDoc Headers were not provided by the original credited author, but by the developer ([MoshiMoshiMochi](https://github.com/MoshiMoshiMochi)) implementing this. Hence, these documentations may not be exactly what the original author envisioned.
@@ -210,6 +215,59 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Sort List Feature
+
+#### Overview
+The sort list feature is an enhancement to the original list feature. Through specifying a flag, the user can sort
+and display the entire list by either alphabetical or recent order. This feature improves the navigability of large 
+address books by allowing users to quickly locate contacts in a preferred viewing order, without altering the underlying
+data structure or saved order of entries.
+
+#### Rationale
+As the original list feature only allowed listing of first to last added, the Sort List feature adds value by providing
+users with greater flexibility and control over how information is displayed. Users often have different priorities,
+some may want to find contacts alphabetically for quick reference, while others may prefer viewing their most recently
+added or edited contacts first.
+
+This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting 
+operation view-based rather than data-based, the system maintains data integrity while enhancing the user experience,
+efficiency, and readability of the contact list.
+
+#### Design Considerations
+- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts 
+  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves 
+  consistency across sessions and ensures that subsequent commands (like edit, delete, etc.) continue to operate on the
+  same underlying list indices.
+
+- **Extensibility for Future Sorting Criteria**: The design allows for future expansion of sorting options, such as
+  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable 
+  comparator-based utility, new sorting flags can be easily integrated without altering the command’s core structure.
+
+#### Implementation Details
+- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the 
+  corresponding sorting mode to the `ListCommand`. 
+
+- **Using Sorted List**: The implementation leverages JavaFX’s `SortedList` to dynamically sort the existing observable
+  list of contacts without modifying the underlying data. The appropriate `comparator` is selected based on the flag
+  specified by the user — for instance, comparing by `name` for alphabetical order or by inverse of the original list
+  for recency.
+
+- Separation of Concerns: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only
+  specifies the desired mode. By doing so, it improves code maintainability and promotes single-responsibility principle.
+
+#### Example Scenarios
+- **User sorts entire list by Default Order**: (first to last)
+  - `list`
+  - Will list the entire contact list from the first added person to last added person.
+
+- **User sorts entire list by Alphabetical Order**: 
+  - `list -a`
+  - Will list the entire contact list in alphabetical order.
+
+- **User sorts entire list by Recent Order**:
+  - `list -r`
+  - Will list the entire contact list in recent order.
+
 ### Pin/unpin feature
 
 #### Overview
@@ -232,6 +290,10 @@ The unpin command restores a contact to its normal position in the list.
 - **Sorting Integration**: The feature is compatible with existing sorting options (e.g., name sort or recency sort). When the user applies any sort, the pin order is reapplied afterward to maintain consistency.
 
 #### Implementation Details
+
+![pin sequence diagram](images/PinSequenceDiagram.png)
+Unpin command follows a similar sequence, replacing `PinCommand` with `UnpinCommand`, and `pin()` with `unpin()`.
+
 - Each contact has an additional field indicating whether it is pinned, along with a timestamp representing when it was pinned.
 - When the list is displayed, a sorting mechanism ensures that all pinned contacts are moved to the top, preserving the order of all other entries.
 - The pin and unpin commands update the relevant contact and trigger a list refresh to reflect the new state immediately.
@@ -338,6 +400,75 @@ This was done so as to maintain the low level of coupling that UI has to other c
 * Obtaining the previous command in the history requires a string parameter, the current text in the command box. This is so that the command being typed by the user can be re-attained by scrolling back down, like in other CLIs.
 * The `CommandHistory` is saved to disk in a newline-delimited manner. This is a simple format that is easy to encode and decode. It fits our requirements, since commands are strictly one line only.
 
+### Launch Communication Mode
+
+#### Overview
+
+The `launch` command helps users launch the selected communication for the specified contact. It will attempt to first
+use an Operating System specific command to launch the browser. If that fails, it will then resort to the Java Desktop API
+as a fallback operation. Finally, it will display a success/failure message based on the result of the launch operation.
+
+#### Rationale
+This feature adds significant value to Devbooks by streamlining the user's workflows by reducing context switching.
+Instead of manually copying and pasting contact information such as telegram handles or GitHub usernames into external
+browsers, users can instantly launch the appropriate communication channel directly from within the app.
+
+#### Design Considerations
+
+- **Operating System Specific Commands**: As not all operating systems support Java's Desktop API library, when
+  launching, the application will first attempt to use system specific commands to attempt to launch the specific
+  communication mode through the web browser. This ensures that, even when using a device without the support the 
+  Java's Desktop API library, that users are still able to use this feature.
+
+- **Cross-Platform Compatibility**: Different platforms (Windows, macOS, Linux) may require distinct command syntaxes
+  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux 
+  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand 
+  interface to function consistently across platforms.
+
+- **Fallback launch mechanism**: This ensures that if operating system–specific commands fail (for example, due to
+  missing environment variables, restricted permissions, or unsupported shells), the application will attempt a
+  secondary launch strategy using Java's built-in `Desktop` API. If this also fails, the application will gracefully
+  inform the user of the issue instead of crashing. This layered fallback mechanism enhances robustness and user
+  experience by preventing silent failures.
+
+- **Browser Specific Implementation**: The launch command only allows launches of browsers (i.e. no use of system
+  specific clients). This ensures that, during testing, even without internet connection, users can still verify the URL
+  of the web page for confirmation if the launch command has worked successfully or not.
+
+#### Implementation Details
+
+- **Util Classes**: 
+  - `ApplicationLinkLauncher`: encapsulates all logic related to preparing the links such that it will be ready
+    to be launched by the `DesktopApi` class.
+  - `ApplicationLinkResult`: Stores the status and resulting message of the launched application. It will be used to
+    inform the user of the success/failure of the operation.
+  - `ApplicationType`: Enumeration of all the different types of application types that DevBooks can launch.
+  - `DesktopApi`: Supports cross-platform Launching by first attempting to launch the using system specific commands,
+    before using Java's Desktop API as a fallback. This class is credited in the 
+    [acknowledgement section](#acknowledgements) to the original creator of the code.
+
+- **GUI enabled ability to launch**:
+  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger 
+    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact 
+    detail and calls the relevant `ApplicationLinkLauncher` method.
+    ![UiLaunchTelegramSequenceDiagram](images/UiLaunchTelegramSequenceDiagram.png)
+
+#### Example Scenarios
+
+1. **Launch Telegram** for **first** Person in displayed list: `launch 1 -l`
+   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
+     specific send message to a Telegram user URL)
+
+2. **Launch GitHub** for **second** Person in displayed list: `launch 2 -g`
+   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
+     default GitHub page of the specified username)
+
+3. **Launch UserGuide**: Press the **F1** key
+   - Devbooks will attempt to launch a browser with the URL in the format formatted 
+     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
+
+- **Note**: Kindly check if the URL is correct when evaluating this feature
+    ![result for `launch 1 -g`](images/alexYeohGitHub.png)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -428,32 +559,31 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1.  DevBooks prompts for command
-2.  User input add command with required contact information
-3.  DevBooks saves contact and show success message
-4.  DevBooks shows the updated contact list
+1. User add contact with required contact information
+2. DevBooks saves contact and show success message
+3. DevBooks shows the updated contact list
 
     Use case ends.
 
 **Extensions**
 
-* 2a. User input add command with invalid contact information
+* 1a. User add contact with invalid contact information
 
-    * 2a1. DevBooks shows an error message
-    * 2a2. User input new add command with contact information
+    * 1a1. DevBooks shows an error message
+    * 1a2. User input new add command with contact information
 
-      Steps 2a1-2a2 are repeated until the add command and contact information entered are correct.
+      Steps 1a1-1a2 are repeated until the new contact information entered are correct.
 
-      Use case resumes from step 3.
+      Use case resumes from step 2.
 
-* 2b. Duplicated contact information found
+* 1b. Duplicated contact information found
 
-    * 2b1. DevBooks shows an error message
-    * 2b2. User input new add command with contact information
+    * 1b1. DevBooks shows an error message
+    * 1b2. User input new add command with contact information
 
-      Steps 2b1-2b2 are repeated until the new contact information does not duplicate with existing contacts.
+      Steps 1b1-1b2 are repeated until the new contact information does not duplicate with existing contacts.
 
-      Use case resumes from step 3.
+      Use case resumes from step 2.
 
 
 **Use case: UC02 - Edit Contact**
@@ -558,26 +688,25 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. DevBooks prompts for command
-2. User inputs the pin command with a valid contact index
-3. DevBooks marks the contact as pinned and updates its position in the contact list
-4. DevBooks shows a success message and displays the updated list with pinned contact(s) at the top
+1. User inputs the pin command with a valid contact index
+2. DevBooks marks the contact as pinned and updates its position in the contact list
+3. DevBooks shows a success message and displays the updated list with pinned contact(s) at the top
 
    Use case ends.
 
 **Extensions**
 
-* 2a. User inputs pin command with an invalid contact index
+* 1a. User inputs pin command with an invalid contact index
 
-    * 2a1. DevBooks shows an error message
-    * 2a2. User inputs a new pin command with a valid contact index
+    * 1a1. DevBooks shows an error message
+    * 1a2. User inputs a new pin command with a valid contact index
 
-      Steps 2a1-2a2 are repeated until a valid contact index is entered.
-      Use case resumes from step 3.
+      Steps 1a1-1a2 are repeated until a valid contact index is entered.
+      Use case resumes from step 2.
 
-* 2b. Selected contact is already pinned
+* 1b. Selected contact is already pinned
 
-    * 2b1. DevBooks shows a message indicating that the contact is already pinned
+    * 1b1. DevBooks shows a message indicating that the contact is already pinned
       Use case ends.
 
 
@@ -585,26 +714,25 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. DevBooks prompts for command
-2. User inputs the unpin command with a valid contact index
-3. DevBooks removes the pin from the selected contact and updates the contact list order
-4. DevBooks shows a success message and displays the updated list
+1. User inputs the unpin command with a valid contact index
+2. DevBooks removes the pin from the selected contact and updates the contact list order
+3. DevBooks shows a success message and displays the updated list
 
    Use case ends.
 
 **Extensions**
 
-* 2a. User inputs unpin command with an invalid contact index
+* 1a. User inputs unpin command with an invalid contact index
 
-    * 2a1. DevBooks shows an error message
-    * 2a2. User inputs a new unpin command with a valid contact index
+    * 1a1. DevBooks shows an error message
+    * 1a2. User inputs a new unpin command with a valid contact index
 
-      Steps 2a1-2a2 are repeated until a valid contact index is entered.
-      Use case resumes from step 3.
+      Steps 1a1-1a2 are repeated until a valid contact index is entered.
+      Use case resumes from step 2.
 
-* 2b. Selected contact is not pinned
+* 1b. Selected contact is not pinned
 
-    * 2b1. DevBooks shows a message indicating that the contact is not pinned
+    * 1b1. DevBooks shows a message indicating that the contact is not pinned
       Use case ends.
 
 
@@ -612,37 +740,36 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. DevBooks prompts for command
-2. User inputs the delete tag command with one or more tags to delete
-3. DevBooks deletes all instances of the found tags from every contact
-4. DevBooks shows a success message indicating which tags were deleted
-5. DevBooks displays the updated contact list
+1. User inputs the delete tag command with one or more tags to delete
+2. DevBooks deletes all instances of the found tags from every contact
+3. DevBooks shows a success message indicating which tags were deleted
+4. DevBooks displays the updated contact list
 
    Use case ends.
 
 **Extensions**
 
-* 2a. User did not specify any tags to delete
+* 1a. User did not specify any tags to delete
 
-    * 2a1. DevBooks shows an error message indicating that no target tag was provided
+    * 1a1. DevBooks shows an error message indicating that no target tag was provided
       Use case ends.
 
-* 2b. None of the specified tags can be found in any contact
+* 1b. None of the specified tags can be found in any contact
 
-    * 2b1. DevBooks shows an error message indicating that no tags were found for deletion
+    * 1b1. DevbBoks shows an error message indicating that no tags were found for deletion
       Use case ends.
 
-* 2c. Some tags are found while others are not
+* 1c. Some tags are found while others are not
 
-    * 2c1. DevBooks deletes all found tags
-    * 2c2. DevBooks shows a success message for tags deleted and a warning message for tags not found
-      Use case resumes from step 5.
+    * 1c1. DevBooks deletes all found tags
+    * 1c2. DevBooks shows a success message for tags deleted and a warning message for tags not found
+      Use case resumes from step 4.
 
 
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+2.  Should be able to hold up to 500 persons without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 4.  Should only be used by a single user (i.e. not a multi-user product).
 5.  Should store data locally and in a human editable text file.
@@ -698,22 +825,56 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimal.
+   2. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimal.
 
-1. Saving window preferences
+2. Saving window preferences
 
    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
+   2. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-1. Retaining data across launches
+3. Retaining data across launches
 
-    1. Add a contact to the contact book. Close the application.
+   1. Add a contact to the contact book. Close the application.
 
-    1. Launch the application.
-        Expected: The new contact should be in the application.
-        A folder `data/` should be created where the .jar file is stored.
+   2. Launch the application.
+       Expected: The new contact should be in the application.
+       A folder `data/` should be created where the .jar file is stored.
+
+### Adding a person
+
+1.  Adding a person with required fields only
+
+    1.  Test case: `add n\John Doe p\98765432`<br>
+        Expected: The contact `John Doe` is added to the contact list. The details of the new contact are shown in the Result Display.
+
+2.  Adding a person with all fields
+
+    1.  Test case: `add n\Jane Smith p\91234567 e\jane@example.com l\janesmith g\jane-s pm\telegram t\friend t\colleague`<br>
+        Expected: The contact `Jane Smith` is added to the contact list with all details (Email, Telegram, GitHub, Preferred Mode, and two tags) correctly stored. The details are shown in the Result Display.
+
+3.  Attempting to add a person with missing required fields
+
+    1.  Test case: `add n\Incomplete Contact`<br>
+        Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use `add` is shown in the Result Display.
+
+    2.  Test case: `add p\99988877`<br>
+        Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use `add` is shown in the Result Display.
+
+4.  Attempting to add a duplicate person
+
+    1.  Prerequisites: A person named `John Doe` with phone `98765432` already exists (added in step 1).
+    2.  Test case: `add n\John Doe p\98765432`<br>
+        Expected: The message "This person already exists in the address book." is shown to the user. The contact list remains unchanged.
+
+5.  Other incorrect add commands to try
+
+    1.  Test case: `add n\Test p\notaphonenumber`<br>
+        Expected: An error message "Phone numbers should only contain numbers, and it should be between 3 and 17 digits long" is shown indicating the phone number format is invalid.
+
+    2.  Test case: `add n\Test p\98765432 e\notanemail`<br>
+        Expected: An error message is shown indicating the email format is invalid.
 
 ### Deleting a person
 
@@ -721,17 +882,53 @@ testers are expected to do more *exploratory* testing.
 
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-   1. Test case: `delete 1`<br>
+   2. Test case: `delete 1`<br>
       Expected: A confirmation prompt is shown in the status bar before the contact is deleted. The to-be-deleted contact is shown in the status message.
 
-   1. Test case: `delete 1` followed by `y`<br>
+   3. Test case: `delete 1` followed by `y`<br>
       Expected: After `y` is input into the confirmation prompt, The details of the deleted contact is shown. The contact is no longer shown in the list.
 
-   1. Test case: `delete dingus`<br>
+   4. Test case: `delete dingus`<br>
       Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use delete is shown in the Result Display.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+   5. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
+
+### Pinning a person
+
+1. Pinning a person while all persons are being shown
+
+   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+   2. Test case: `pin 4`<br>
+      Expected: The details of the pinned contact is shown in the Result Display. The contact is moved to the top of the list with pin icon visible.
+
+   3. Test case: `pin John`<br>
+      Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use pin is shown in the Result Display.
+   
+   4. Test case: `pin 3` followed by `pin 1` to pin an already pinned contact <br>
+      Expected: The message "Person is already pinned." is shown to the user.
+
+   5. Other incorrect pin commands to try: `pin`, `pin x`, `...` (where x is larger than the list size)<br>
+      Expected: Similar to expected in step 3.
+
+### Unpinning a person
+
+1. Unpinning a person while all persons are being shown
+
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+    2. Test case: `unpin 4`<br>
+       Expected: The details of the unpinned contact is shown in the Result Display. The contact is moved back to its original position in the list based on sorting order with pin icon removed.
+
+    3. Test case: `unpin John`<br>
+       Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use unpin is shown in the Result Display.
+
+    4. Test case: Ensure that contact of index 3 is not pinned and enter `unpin 3` to unpin a not pinned contact <br>
+       Expected: The message "Person is currently not pinned." is shown to the user.
+
+    5. Other incorrect pin commands to try: `unpin`, `unpin x`, `...` (where x is larger than the list size)<br>
+       Expected: Similar to expected in step 3.
 
 ### Finding a person
 
@@ -875,12 +1072,12 @@ testers are expected to do more *exploratory* testing.
       1. Verify that a browser opens with the specific URL `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html`,
       2. and Result display show the success message above as well as a caveat about launching Telegram
 
-### Renaming the Tags for Multiple Users
+### Renaming/Deleting the Tags for Multiple Users
 
 1. Renaming Tags for all Users
    1. Prerequisites: The displayed list has at least 1 person with the target tag
 
-   2. Test: `tag -r t/CS1101 r/CS2103` <br>
+   2. Test: `tag -r t\CS1101 r\CS2103` <br>
       Expected Result Display:
         ```
       Renamed tag [CS1101] to [CS2103] for 2 person(s).
@@ -890,7 +1087,7 @@ testers are expected to do more *exploratory* testing.
 2. Renaming Tags for all Users
     1. Prerequisites: The displayed list has NO person with the target tag
 
-   2. Test: `tag -r t/CS1101 r/CS2103` <br>
+   2. Test: `tag -r t\CS1101 r\CS2103` <br>
        Expected Result Display:
          ```
        No persons found with tag: [[CS1101]]
@@ -898,16 +1095,16 @@ testers are expected to do more *exploratory* testing.
    Expected Result: Error Message displaying that No Person is found using the target tag.
 
 3. Deleting Tags for all Users (Given the target tag **does exist**)
-    1. Prerequisites: The displayed list has at least 1 person with the target tags
+   1. Prerequisites: The displayed list has at least 1 person with the target tags
 
-   2. Test: `tag -d t/CS1101 t/CS2103` <br>
-        Expected Result Display:
-       ```
-       Deleted tags: [[CS1101], [CS2103]]
-       ```
-       Expected Output deletes `CS1101` & `CS2103` tag for all contacts with the tag.
+    2. Test: `tag -d t\CS1101 t\CS2103` <br>
+    Expected Result Display:
+    ```
+    Deleted tags: [[CS1101], [CS2103]]
+    ```
+    Expected Output deletes `CS1101` & `CS2103` tag for all contacts with the tag.
 
-<br>
+<div style = "page-break-after:always;"></div>
 
 ## Appendix: Effort
 

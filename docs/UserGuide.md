@@ -23,7 +23,7 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
+1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will display all the commands with its function.<br>
    Some example commands you can try:
 
    * `list` : Lists all contacts.
@@ -84,6 +84,19 @@ Adds a person to the address book.
 
 Format: `add n\NAME p\PHONE_NUMBER [e\EMAIL] [l\TELEGRAM] [g\GITHUB] [pm\PREFERRED_MODE] [t\TAG]…​`
 
+* `NAME` and `PHONE_NUMBER` are **mandatory** fields.
+* `EMAIL`, `TELEGRAM`, `GITHUB`, `PREFERRED_MODE` and `TAG` are **optional** fields.
+* `PREFERRED_MODE` can only be one of the following values (case-insensitive):
+  * `telegram`
+  * `email`
+  * `phone`
+* `NAME` accepts letters, numbers, spaces, or forward slashes.
+* `PHONE_NUMBER` should only contain numbers, and it should be between 3 and 17 digits long.
+* `EMAIL`, if provided, should be a valid email address format with maximum length of 254 characters.
+* `TELEGRAM`, if provided, should only contain letters, numbers, or underscores, and it should be between 5 and 32 characters long.
+* `GITHUB`, if provided, should only contain letters, numbers, or hyphens, and it should be between 1 and 39 characters long.
+* `TAG`, if provided, should only contain letters and numbers, and it should be between 1 and 128 characters long.
+
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
 A person can have any number of tags (including 0)
 </div>
@@ -96,10 +109,6 @@ Examples:
 * `add n\Betsy Crowe p\99998888 t\friend e\betsycrowe@example.com  t\criminal l\betsy001 g\betsy12 pm\telegram`
 
 ![add contact example](images/addContactExample.png)
-
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-Parameters like Email, Telegram, GitHub, Preferred Contact and Tags are **optional**
-</div>
 
 ### Listing all persons : `list`
 
@@ -367,6 +376,10 @@ Format: `tag -r t\TAG r\TAG`
 * `t\TAG` refers to the value of the target tag to be renamed
 * `r\TAG` refers to the renamed value
 
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+Target tag name are case-sensitive when renaming tags.
+</div>
+
 Example:
 - `tag -r t\CS1101 r\CS2103`
   - renames the existing tag `CS1101` for all contacts that has it with the new tag `CS2103`
@@ -386,6 +399,10 @@ Format: `tag -d t\TAG…​`
 
 * Use `-d` to signify delete tag command
 * `t\TAG` refers to the target tag to be deleted for all users
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+Target tag name are case-sensitive when deleting tags.
+</div>
 
 Example:
 - `tag -d t\CS1101 t\CS2103`
@@ -415,6 +432,11 @@ Format: `export NAME`
 * `NAME` refers to the name of the file
 * `NAME` is **optional**. Default file name is contacts.csv
 * Naming convention and rules follow default filename rules, including illegal characters
+    * Common illegal characters include "<", ">", ":", "?"...
+* If `NAME` is already an existing filename in the data folder (export handles duplicate)
+  * Appending `-1` at the end of the filename
+  * If the contacts.csv is already in the data folder, and user runs `export`
+    * contacts-1.csv will be created
 
 Example:
 
@@ -422,7 +444,9 @@ Example:
     * data will be exported to a file called contacts.csv in data folder
 * `export phonebook`
     * data will be exported to a file called phonebook.csv in data folder
-
+* `export ???ASDF`
+<br><br>
+  ![export fail](images/ExportFail.png)
 --------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
@@ -450,9 +474,9 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n\NAME] [p\PHONE_NUMBER] [e\EMAIL] [l\TELEGRAM] [g\GITHUB] [pm\PREFERRED_MODE] [t\TAG]…​ [r\TAG]…​`<br> e.g., `edit 1 p\91234567`
 **Find** | `find n\KEYWORD [MORE_KEYWORDS]` or `find t\KEYWORD [MORE_KEYWORDS]`<br> e.g., `find n\James Jake`, `find t\friend`
 **List** | `list [-a (alphabetical)] [-r (recent)]`<br> e.g., `list -a`
-**Help** | `help COMMAND`
+**Help** | `help COMMAND` <br> e.g., `help add`
 **Launch** | `launch INDEX [-l (Telegram)] [-g (GitHub)]`<br> e.g., `launch 2 -l`
-**Tag** | Rename: `tag -r t\TAG r\TAG` <br> `tag -r t\CS1101 r\CS2103` <br><br> Delete: `tag -d t\TAG…` <br> `tag -d t\CS1101`
+**Tag** | Rename: `tag -r t\TAG r\TAG` <br> e.g., `tag -r t\CS1101 r\CS2103` <br><br> Delete: `tag -d t\TAG…` <br> e.g., `tag -d t\CS1101`
 **Pin** | `pin INDEX` <br> e.g., `pin 3`
 **Unpin** | `unpin INDEX` <br> e.g., `unpin 1`
 **Export** | `export [NAME]` <br> e.g., `export phonebook`

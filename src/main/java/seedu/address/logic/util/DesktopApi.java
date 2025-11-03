@@ -86,15 +86,12 @@ public class DesktopApi {
      */
     public static boolean browse(URI uri) {
 
-        if (openSystemSpecific(uri.toString())) {
-            return true;
+        boolean isSuccess = openSystemSpecific(uri.toString());
+        if (!isSuccess) {
+            isSuccess = browseDesktop(uri);
         }
 
-        if (browseDesktop(uri)) {
-            return true;
-        }
-
-        return false;
+        return isSuccess;
     }
 
     /**

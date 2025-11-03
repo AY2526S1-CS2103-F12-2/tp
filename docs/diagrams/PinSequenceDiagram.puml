@@ -1,0 +1,79 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+skinparam ParticipantPadding 42
+skinparam sequenceReferenceBackgroundColor #D3D3D3
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant "p:PinCommand" as PinCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant "personToPin:Person" as Person MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+participant ":Storage" as Storage STORAGE_COLOR
+end box
+
+[-> LogicManager : execute("pin 2")
+activate LogicManager
+
+ref over LogicManager: parsePinCommand
+
+LogicManager -> PinCommand : execute(model)
+activate PinCommand
+
+PinCommand -> Model : getSortedAndFilteredPersonList()
+activate Model
+
+Model --> PinCommand : lastShownList
+deactivate Model
+
+PinCommand -> Person : pin()
+activate Person
+
+Person --> PinCommand : pinnedPerson
+deactivate Person
+
+PinCommand -> Model : setPerson(personToPin, pinnedPerson)
+activate Model
+
+Model --> PinCommand
+deactivate Model
+
+PinCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+activate Model
+
+Model --> PinCommand
+deactivate Model
+
+create CommandResult
+PinCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> PinCommand
+deactivate CommandResult
+
+PinCommand --> LogicManager : r
+deactivate PinCommand
+
+LogicManager -> LogicManager : saveIfRequired(p)
+activate LogicManager
+
+LogicManager -> Storage : saveAddressBook(model.getAddressBook())
+activate Storage
+
+Storage --> LogicManager
+deactivate Storage
+
+LogicManager --> LogicManager
+deactivate LogicManager
+
+[<-- LogicManager : r
+deactivate LogicManager
+@enduml

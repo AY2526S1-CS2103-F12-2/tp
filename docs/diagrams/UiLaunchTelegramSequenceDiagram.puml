@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+autoactivate on
+hide footbox
+skinparam minClassWidth 150
+skinparam sequenceReferenceBackgroundColor #D3D3D3
+box "Ui" UI_COLOR_T1
+participant ":PersonCard" #1D8900
+participant ":ResultDisplay" #1D8900
+
+box "Logic" LOGIC_COLOR_T1
+participant ":ApplicationLinkLauncher" LOGIC_COLOR
+participant ":DesktopApi" #3333C4
+participant "r:ApplicationLinkResult" #3333C4
+end box
+
+
+-> ":PersonCard" : launchTelegram
+":PersonCard" -> ":ApplicationLinkLauncher" : launchTelegram(username)
+ref over ":ApplicationLinkLauncher"
+    Prepare URI for launching
+end ref
+
+":ApplicationLinkLauncher" -> ":DesktopApi" : browse(uri)
+":DesktopApi" -> ":DesktopApi" : openSystemSpecific(uri)
+
+
+ref over ":DesktopApi"
+    Launch using system specific commands
+end ref
+return
+alt #ebebeb !isSuccess
+
+":DesktopApi" -> ":DesktopApi" : browseDesktop(uri)
+ref over ":DesktopApi"
+    Launch using Java Desktop API
+end ref
+return
+end
+return
+destroy ":DesktopApi"
+
+
+create "r:ApplicationLinkResult"
+":ApplicationLinkLauncher" -> "r:ApplicationLinkResult" :
+return r
+return
+destroy ":ApplicationLinkLauncher"
+
+":PersonCard" -> ":ResultDisplay" : setFeedbackToUser(message)
+return
+
+destroy "r:ApplicationLinkResult"
+return
+
+
+@enduml
