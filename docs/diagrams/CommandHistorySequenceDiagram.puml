@@ -29,8 +29,14 @@ activate logic LOGIC_COLOR
 ref over logic: parseAndExecuteCommand
 logic -> model: addCommandToHistory("tag")
 activate model MODEL_COLOR
+note left of logic
+    addCommandToHistory()
+    will not be executed if
+    execution of command fails,
+    since an error is thrown
+    and propagated up
+end note
 
-'// add note here
 
 model --> logic
 deactivate model
