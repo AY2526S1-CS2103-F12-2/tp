@@ -195,6 +195,7 @@ The `Model` component,
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+* saves command history in newline-delimited format, and provides a read-only view of it to the UI.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -309,7 +310,7 @@ Other notes:
 * The UI component holds a reference to an Autocompletor object, which when created populates a `Trie` with command words obtained from the `CommandRegistry`
 * Pressing `<TAB>` updates the `CommandBox` with the hint text that is currently being shown to the user.<br>
 Note that another call to the `Autocompletor` is **not** made, to prevent situations where the autocompleted text does not match with the hint that is shown to the user.
-* The Trie is adapted from [Princeton's TrieST](https://algs4.cs.princeton.edu/52trie/) implementation, and contains a subset of features. For more information on how Tries work, [see here](https://en.wikipedia.org/wiki/Trie). 
+* The Trie is adapted from [Princeton's TrieST](https://algs4.cs.princeton.edu/52trie/) implementation, and contains a subset of features. For more information on how Tries work, [see here](https://en.wikipedia.org/wiki/Trie).
 
 --------------------------------------------------------------------------------------------------------------------
 
