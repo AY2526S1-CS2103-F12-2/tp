@@ -154,7 +154,7 @@ Format: `find n\KEYWORD [MORE_KEYWORDS]` or `find t\KEYWORD [MORE_KEYWORDS]`
 * Keywords must match the **START** of any word in the name or tag.
   * e.g. `Ha` will match `Hans Zimmer` (first name) and `David Harris` (surname), but not `Johann`.
 * The search is **case-insensitive**.
-* Only one prefix (`n\` for names or `t\` for tags) can be used at a time. If both are provided, **only the first 
+* Only one prefix (`n\` for names or `t\` for tags) can be used at a time. If both are provided, **only the first
   prefix and its keywords are used.**
 * Contacts matching **at least one keyword** will be displayed (i.e. `OR` search).
 * The order of keywords does not matter.
@@ -171,7 +171,7 @@ Examples:
 * `find n\a`
   * Finds all persons with names start with "A" e.g. `Alex yeoh`, `amy tan`
 * `find n\charlotte david`
-  * Finds anyone whose **name has words starting with** `Charlotte` or `David`. (e.g.`Charlotte 
+  * Finds anyone whose **name has words starting with** `Charlotte` or `David`. (e.g.`Charlotte
     Oliveiro`, `David Li`<br>
     ![result for 'find n\charlotte david'](images/findCharlotteDavidResult.png)
 
@@ -257,7 +257,7 @@ These above confirmation inputs are case *insensitive*
 
 * `<Esc>` refers to the *escape key* on the keyboard.
 
-* Switching to scroll mode *does not clear pending state* - if you have a pending operation (e.g. deletion), you must confirm the operation upon switching back to insert mode.  
+* Switching to scroll mode *does not clear pending state* - if you have a pending operation (e.g. deletion), you must confirm the operation upon switching back to insert mode.
 </div>
 
 #### Insert Mode: `i`

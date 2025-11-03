@@ -246,35 +246,35 @@ The unpin command restores a contact to its normal position in the list.
 
 #### Overview
 
-The `find` command helps user quickly locate specific contacts by searching for keywords in their names or tags. It 
-matches any contact where **at least one word** in the name or tag **begins with** a given keyword, making it easy 
+The `find` command helps user quickly locate specific contacts by searching for keywords in their names or tags. It
+matches any contact where **at least one word** in the name or tag **begins with** a given keyword, making it easy
 to filter a large address book for relevant entries.
 
 #### Rationale
 
-As the address books grows, it's common to search for people based on partial names, initials, or tags (like 
-`project` or `family`). Rather than scrolling and scanning, users can use the `find` command to instantly filter the 
+As the address books grows, it's common to search for people based on partial names, initials, or tags (like
+`project` or `family`). Rather than scrolling and scanning, users can use the `find` command to instantly filter the
 list by starting letters or words.
 
 #### Design Considerations
-- **Word-based matching**: The search checks every word in the name or tag: if any word begins with a keyword, that 
+- **Word-based matching**: The search checks every word in the name or tag: if any word begins with a keyword, that
   contact is returned.
-- **Multiple keywords**: When multiple keywords are provided, a contact is included in the results if any of the 
+- **Multiple keywords**: When multiple keywords are provided, a contact is included in the results if any of the
   keywords matches the beginning of any word in the contacts's name or tag (an OR search).
 - **Case-insensitive**: The matching ignores letter case for convenience.
-- **Prefix flags**: Use `n\` for names or `t\` for tags. If both prefixes are provided, only the first prefix and 
+- **Prefix flags**: Use `n\` for names or `t\` for tags. If both prefixes are provided, only the first prefix and
   its keywords are used.
 - **Sorting**: The results are displayed with index numbers for easy follow-up actions.
 
 #### Implementation Details
 - Each name or tag is split into words and checked against all supplied keywords.
-- The search logic determines whether to search names or tags based on the first prefix entered (`n\` for names or 
+- The search logic determines whether to search names or tags based on the first prefix entered (`n\` for names or
   `t\` for tags). Only keywords following this prefix are considered, additional prefixes are ignored.
 - Matches are shown as a numbered list, allowing for follow-up actions like editing or pinning.
 - The command is compatible with all display sorting options: found contacts are listed in the current sorting mode.
 
 #### Example Scenarios
-1. **Find contacts by given name**: `find n\james` returns any contact whose name has a word starting with `james`, 
+1. **Find contacts by given name**: `find n\james` returns any contact whose name has a word starting with `james`,
    like `James Ho` or `John jameson`.
 2. **Find by tag**: `find t\friend` lists all contacts tagged with a word starting with "friend"
 3. **Multiple keywords**: `find n\Alex Ann` finds any contact whose name contains a word starting with "Alex" or "Ann".
@@ -291,7 +291,7 @@ them to fill it with `<TAB>` when satisfied.
 
 #### Rationale
 
-One of the key goals of DevBooks is speed. Our target users are CS students who are (or will be!) accustomed to 
+One of the key goals of DevBooks is speed. Our target users are CS students who are (or will be!) accustomed to
 command line interfaces. As such, we want to provide common features and functionality found in CLIs like bash.
 Therefore, autocomplete was implemented with a similar control scheme to most CLIs.
 
@@ -672,7 +672,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **NUS SOC**: National University of Singapore, School of Computing
 * **Preferred Mode of communication**: Telegram, Email or Phone
-* **Prefix**: A marker used to specify a particular field or value in a command. (e.g. `n\` for names, `p\` for 
+* **Prefix**: A marker used to specify a particular field or value in a command. (e.g. `n\` for names, `p\` for
   phone, `t\` for tag, etc).
 * **Private contact detail**: A contact detail that is not meant to be shared with others
 * **Scroll Mode**: A mode that disables text input and allow users to navigate through the interface using keyboard
@@ -835,8 +835,8 @@ testers are expected to do more *exploratory* testing.
         Launched TELEGRAM successfully.
       Note: You can only launch Telegram links from the browser if you have the Telegram application installed on your device.
         ```
-      Expected Result (regardless of Internet Access): 
-      1. Verify that a browser opens with the URL formatted `https://t.me/HANDLE` whereby handle should be the specified contact's Telegram handle, 
+      Expected Result (regardless of Internet Access):
+      1. Verify that a browser opens with the URL formatted `https://t.me/HANDLE` whereby handle should be the specified contact's Telegram handle,
       2. & Result display show the success message above.
 
 2. Launch Second Person's without the specified communication mode.
@@ -847,7 +847,7 @@ testers are expected to do more *exploratory* testing.
        ```
       Person Name This person does not have a Telegram handle.
        ```
-      Expected Result: 
+      Expected Result:
       1. Result display show the message of the contact's name followed by the error message above
 
 3. Launch Third Person's GitHub.
@@ -870,7 +870,7 @@ testers are expected to do more *exploratory* testing.
        Launched USERGUIDE successfully.
        Note: You can only launch Telegram links from the browser if you have the Telegram application installed on your device.
        ```
-      Expected Result: 
+      Expected Result:
       1. Verify that a browser opens with the specific URL `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html`,
       2. and Result display show the success message above as well as a caveat about launching Telegram
 
