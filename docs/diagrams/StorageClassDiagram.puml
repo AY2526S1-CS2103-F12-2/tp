@@ -13,6 +13,7 @@ Class JsonUserPrefsStorage
 
 Class "<<interface>>\nStorage" as Storage
 Class StorageManager
+Class "CsvAddressBookStorage" as CsvAddressBookStorage
 
 package "AddressBook Storage" #F4F6F6{
 Class "<<interface>>\nAddressBookStorage" as AddressBookStorage
@@ -32,6 +33,9 @@ Class "NewlineDelimitedCommandHistoryStorage" as NDCHS
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
+Class HiddenOutsideOther #FFFFFF
+HiddenOutsideOther ..> CsvAddressBookStorage
+
 StorageManager .up.|> Storage
 StorageManager -up-> "1" UserPrefsStorage
 StorageManager -up-> "1" AddressBookStorage
@@ -47,6 +51,8 @@ JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedPerson
 JsonAdaptedPerson --> "*" JsonAdaptedTag
+
+CsvAddressBookStorage ..left> AddressBookStorage
 
 NDCHS -.up|> CommandHistoryStorage
 

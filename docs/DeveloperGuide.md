@@ -198,6 +198,7 @@ The `Storage` component,
 * saves command history in newline-delimited format, and provides a read-only view of it to the UI.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+* includes a `CsvAddressBookStorage` class that the `Model` holds a reference to to export data.
 
 ### Common classes
 
