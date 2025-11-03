@@ -235,7 +235,7 @@ The unpin command restores a contact to its normal position in the list.
 #### Implementation Details
 
 ![pin sequence diagram](images/PinSequenceDiagram.png)
-Unpin command follows a similar sequence, replacing `PinCommand` with `UnpinCommand`, `PinCommandParser` with `UnpinCommandParser` and `pin()` with `unpin()`.
+Unpin command follows a similar sequence, replacing `PinCommand` with `UnpinCommand`, and `pin()` with `unpin()`.
 
 - Each contact has an additional field indicating whether it is pinned, along with a timestamp representing when it was pinned.
 - When the list is displayed, a sorting mechanism ensures that all pinned contacts are moved to the top, preserving the order of all other entries.

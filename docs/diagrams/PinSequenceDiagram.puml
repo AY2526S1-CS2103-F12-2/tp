@@ -3,14 +3,10 @@
 skinparam ArrowFontStyle plain
 
 skinparam ParticipantPadding 42
+skinparam sequenceReferenceBackgroundColor #D3D3D3
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":State" as State LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant "<<class>>\n:CommandRegistry" as CommandRegistry LOGIC_COLOR
-participant "f:CommandFactory" as CommandFactory LOGIC_COLOR
-participant ":PinCommandParser" as PinCommandParser LOGIC_COLOR
 participant "p:PinCommand" as PinCommand LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
@@ -27,58 +23,7 @@ end box
 [-> LogicManager : execute("pin 2")
 activate LogicManager
 
-LogicManager -> LogicManager : buildCommand("pin 2")
-activate LogicManager
-
-LogicManager -> State : isAwaitingUserConfirmation()
-activate State
-
-State --> LogicManager : false
-deactivate State
-
-LogicManager -> AddressBookParser : parseCommand("pin 2")
-activate AddressBookParser
-
-AddressBookParser -> CommandRegistry : getCommandFactory("pin")
-activate CommandRegistry
-
-CommandRegistry --> AddressBookParser : f
-deactivate CommandRegistry
-
-AddressBookParser -> CommandFactory : create(" 2")
-activate CommandFactory
-
-create PinCommandParser
-CommandFactory -> PinCommandParser
-activate PinCommandParser
-
-PinCommandParser --> CommandFactory
-deactivate PinCommandParser
-
-CommandFactory -> PinCommandParser : parse(" 2")
-activate PinCommandParser
-
-create PinCommand
-PinCommandParser -> PinCommand
-activate PinCommand
-
-PinCommand --> PinCommandParser
-deactivate PinCommand
-
-PinCommandParser --> CommandFactory : p
-deactivate PinCommandParser
-'Hidden arrow to position the destroy marker below the end of the activation bar.
-PinCommandParser -[hidden]-> AddressBookParser
-destroy PinCommandParser
-
-CommandFactory --> AddressBookParser : p
-deactivate CommandFactory
-
-AddressBookParser --> LogicManager : p
-deactivate AddressBookParser
-
-LogicManager --> LogicManager : p
-deactivate LogicManager
+ref over LogicManager: parsePinCommand
 
 LogicManager -> PinCommand : execute(model)
 activate PinCommand
@@ -129,13 +74,6 @@ deactivate Storage
 LogicManager --> LogicManager
 deactivate LogicManager
 
-LogicManager -> LogicManager : saveCommandHistory("pin 2")
-activate LogicManager
-
-LogicManager --> LogicManager
-deactivate LogicManager
-
 [<-- LogicManager : r
 deactivate LogicManager
-destroy PinCommand
 @enduml
