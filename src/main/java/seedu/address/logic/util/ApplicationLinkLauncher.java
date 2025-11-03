@@ -87,12 +87,10 @@ public class ApplicationLinkLauncher {
             return new ApplicationLinkResult(false, String.format(MESSAGE_FAILURE, type));
         }
 
-        switch (type) {
-        case TELEGRAM: {
+        if (type.equals(ApplicationType.TELEGRAM)) {
             return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS_TELEGRAM, type));
-        } default: {
+        } else {
             return new ApplicationLinkResult(true, String.format(MESSAGE_SUCCESS, type));
-        }
         }
     }
 
