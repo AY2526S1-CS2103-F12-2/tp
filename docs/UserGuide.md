@@ -9,6 +9,7 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## Quick start
 
@@ -39,6 +40,7 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 1. Refer to the [Features](#features) below for details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## Features
 
@@ -64,6 +66,8 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
 
+<div style = "page-break-after:always;"></div>
+
 ### Viewing help : `help`
 
 Shows help message in the GUI, explaining all commands.
@@ -77,6 +81,8 @@ Format: `help`
 ![detailed help message](images/detailedHelpMessage.png)
 
 Format: `help add`
+
+<div style = "page-break-after:always;"></div>
 
 ### Adding a person: `add`
 
@@ -110,6 +116,8 @@ Examples:
 
 ![add contact example](images/addContactExample.png)
 
+<div style = "page-break-after:always;"></div>
+
 ### Listing all persons : `list`
 
 Shows a list of all persons in the address book.
@@ -127,6 +135,8 @@ Examples:
 * `list -a` shows all persons in alphabetical order by name.
 * `list -r` shows all persons in the reverse order they were added.
 * `list -a -r` error message is displayed.
+
+<div style = "page-break-after:always;"></div>
 
 ### Editing a person : `edit`
 
@@ -153,6 +163,8 @@ Examples:
        ```
        Edited Person: Betsy Crower; Phone: 91093122; Telegram: ; Github: BestyCrower; Tags: [CS2100][CS2103]
        ```
+
+<div style = "page-break-after:always;"></div>
 
 ### Finding persons by name or tag: `find`
 
@@ -184,6 +196,8 @@ Examples:
     Oliveiro`, `David Li`<br>
     ![result for 'find n\charlotte david'](images/findCharlotteDavidResult.png)
 
+<div style = "page-break-after:always;"></div>
+
 ### Deleting a person : `delete`
 
 Deletes the specified person from the address book. Command requires follow-up confirmation.
@@ -198,6 +212,8 @@ Examples:
 * `list` followed by `delete 2` and a `y` deletes the 2nd person in the address book.
 * * `list` followed by `delete 2` and a `n` performs no operation.
 * `find n\Betsy` followed by `delete 1` and a `y` deletes the 1st person in the results of the `find` command.
+
+<div style = "page-break-after:always;"></div>
 
 ### Pinning a person : `pin`
 
@@ -214,6 +230,8 @@ Examples:
 * `find n\Betsy` followed by `pin 2` pins the 2nd person in the results of the `find` command.
 
 ![pin contact example](images/pinContactExample.png)
+
+<div style = "page-break-after:always;"></div>
 
 ### Unpinning a person : `unpin`
 
@@ -242,6 +260,8 @@ Format: `clear`
 Exits the program.
 
 Format: `exit`
+
+<div style = "page-break-after:always;"></div>
 
 ### Confirming commands : `y`/`n`/`yes`/`no`
 
@@ -291,6 +311,7 @@ Press `j` to select the entry below the current entry.
 
 Press `k` to select the entry above the current entry.
 
+<div style = "page-break-after:always;"></div>
 
 ### Launching external communication modes : `launch`
 
@@ -327,6 +348,8 @@ Examples:
 * Your mileage with this feature might vary if your operating system is not one stated above.
 * Kindly refer to [Known Issues: 2](#known-issues) to see more about the limitations
 
+<div style = "page-break-after:always;"></div>
+
 ### Saving the data
 
 There is no need to save manually as the AddressBook data are saved in the hard disk automatically **ONLY after any command that changes the data**.
@@ -357,6 +380,8 @@ Press the `Up` arrow key to cycle backwards through your command history.
 #### Next Command: `Down` Arrow Key
 
 Press the `Down` arrow key to cycle forwards through your command history.
+
+<div style = "page-break-after:always;"></div>
 
 ### Autocomplete
 
@@ -393,6 +418,8 @@ Example:
     ```
 ![rename tag example](images/renameTagExample.png)
 
+<div style = "page-break-after:always;"></div>
+
 ### Deleting Tags for Multiple Contacts
 
 Format: `tag -d t\TAG…​`
@@ -423,6 +450,8 @@ Example:
 
 ![delete tag example](images/deleteTagExample.png)
 
+<div style = "page-break-after:always;"></div>
+
 ### Exporting Contacts
 
 Exports contacts into a csv file in the data folder.
@@ -448,6 +477,7 @@ Example:
 <br><br>
   ![export fail](images/ExportFail.png)
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## FAQ
 
@@ -455,6 +485,7 @@ Example:
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
 
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## Known issues
 
@@ -463,6 +494,7 @@ Example:
 3. **Unaccounted changes in the AddressBook if its addressbook.json file is edited whilst the application is running.** This is mainly as a result of how we handle when the reading and [saving of data](#saving-the-data) is triggered. As a result we are unable to detect changes to the addressbook.json file during the run time of the application and any direct changes made to this file whilst the application is running will be **OVERWRITTEN if [saving of data](#saving-the-data) is triggered.** Hence, the user should **NOT** edit the addressbook.json file while the application is in use.
 
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## Command summary
 
@@ -482,6 +514,7 @@ Action | Format, Examples
 **Export** | `export [NAME]` <br> e.g., `export phonebook`
 
 --------------------------------------------------------------------------------------------------------------------
+<div style = "page-break-after:always;"></div>
 
 ## Navigation Summary
 
