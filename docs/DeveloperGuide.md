@@ -247,10 +247,17 @@ efficiency, and readability of the contact list.
   specifies the desired mode. By doing so, it improves code maintainability and promotes single-responsibility principle.
 
 #### Example Scenarios
-- **User sorts entire list by Alphabetical order**: 
+- **User sorts entire list by Default Order**: (first to last)
+  - `list`
+  - Will list the entire contact list from the first added person to last added person.
+
+- **User sorts entire list by Alphabetical Order**: 
   - `list -a`
-  - 
-- **User sorts entire
+  - Will list the entire contact list in alphabetical order.
+
+- **User sorts entire list by Recent Order**:
+  - `list -r`
+  - Will list the entire contact list in recent order.
 
 ### Pin/unpin feature
 
