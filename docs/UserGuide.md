@@ -9,7 +9,6 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
-<div style = "page-break-after:always;"></div>
 
 ## Quick start
 
@@ -231,8 +230,6 @@ Examples:
 
 ![pin contact example](images/pinContactExample.png)
 
-<div style = "page-break-after:always;"></div>
-
 ### Unpinning a person : `unpin`
 
 Unpins the specified person from the address book.
@@ -249,6 +246,8 @@ Examples:
 
 ![unpin contact example](images/unpinContactExample.png)
 
+<div style = "page-break-after:always;"></div>
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book. Command requires a follow-up confirmation.
@@ -260,8 +259,6 @@ Format: `clear`
 Exits the program.
 
 Format: `exit`
-
-<div style = "page-break-after:always;"></div>
 
 ### Confirming commands : `y`/`n`/`yes`/`no`
 
@@ -276,6 +273,8 @@ Cancel Command Format: `n` or `no`
 <div markdown="block" class="alert alert-info">
 These above confirmation inputs are case *insensitive*
 </div>
+
+<div style = "page-break-after:always;"></div>
 
 ### Switching Modes
 <div markdown="block" class="alert alert-info">
@@ -364,6 +363,8 @@ AddressBook data are saved automatically as a JSON file `[JAR file location]/dat
 If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
+
+<div style = "page-break-after:always;"></div>
 
 ### Accessing Command History
 Access your previously entered commands by pressing the `Up` and `Down` arrow keys when the Command Box is focused.
