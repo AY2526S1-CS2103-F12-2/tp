@@ -252,7 +252,7 @@ efficiency, and readability of the contact list.
   specified by the user — for instance, comparing by `name` for alphabetical order or by inverse of the original list
   for recency.
 
-- Separation of Concerns: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only
+- **Separation of Concerns**: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only
   specifies the desired mode. By doing so, it improves code maintainability and promotes single-responsibility principle.
 
 #### Example Scenarios
@@ -1105,7 +1105,7 @@ testers are expected to do more *exploratory* testing.
 
 <div style = "page-break-after:always;"></div>
 
-## Appendix: Effort
+## **Appendix: Effort**
 
 Overall, our effort placed into the project as a group is higher-than-average. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
 
