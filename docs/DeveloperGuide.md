@@ -409,7 +409,7 @@ use an Operating System specific command to launch the browser. If that fails, i
 as a fallback operation. Finally, it will display a success/failure message based on the result of the launch operation.
 
 #### Rationale
-This feature adds significant value to Devbooks by streamlining the user's workflows by reducing context switching.
+This feature adds significant value to DevBooks by streamlining the user's workflows by reducing context switching.
 Instead of manually copying and pasting contact information such as telegram handles or GitHub usernames into external
 browsers, users can instantly launch the appropriate communication channel directly from within the app.
 
@@ -456,15 +456,15 @@ browsers, users can instantly launch the appropriate communication channel direc
 #### Example Scenarios
 
 1. **Launch Telegram** for **first** Person in displayed list: `launch 1 -l`
-   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
+   - DevBooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
      specific send message to a Telegram user URL)
 
 2. **Launch GitHub** for **second** Person in displayed list: `launch 2 -g`
-   - Devbooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
+   - DevBooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
      default GitHub page of the specified username)
 
 3. **Launch UserGuide**: Press the **F1** key
-   - Devbooks will attempt to launch a browser with the URL in the format formatted
+   - DevBooks will attempt to launch a browser with the URL in the format formatted
      `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
 
 - **Note**: Kindly check if the URL is correct when evaluating this feature
