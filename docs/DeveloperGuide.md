@@ -282,15 +282,14 @@ list by starting letters or words.
 
 #### Overview
 
-The `launch` command helps user's launch the selected communication for the specified contact. It will attempt to first
-use Operating System specific command to launch the browser. If that fails, it will then resort to the Java Desktop API
+The `launch` command helps users launch the selected communication for the specified contact. It will attempt to first
+use an Operating System specific command to launch the browser. If that fails, it will then resort to the Java Desktop API
 as a fallback operation. Finally, it will display a success/failure message based on the result of the launch operation.
 
 #### Rationale
 This feature adds significant value to Devbooks by streamlining the user's workflows by reducing context switching.
 Instead of manually copying and pasting contact information such as telegram handles or GitHub usernames into external
 browsers, users can instantly launch the appropriate communication channel directly from within the app.
-
 
 #### Design Considerations
 
@@ -338,7 +337,7 @@ browsers, users can instantly launch the appropriate communication channel direc
    - Devbooks will attempt to launch a browser with the URL in the format formatted `https://t.me/HANDLE` (i.e. the
      specific send message to a Telegram user URL)
 
-2. **Launch Telegram** for **second** Person in displayed list: `launch 2 -g`
+2. **Launch GitHub** for **second** Person in displayed list: `launch 2 -g`
    - Devbooks will attempt to launch a browser with the URL in the format formatted `https://github.com/USERNAME` (i.e.
      default GitHub page of the specified username)
 
