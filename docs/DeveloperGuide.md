@@ -905,3 +905,33 @@ testers are expected to do more *exploratory* testing.
        Deleted tags: [[CS1101], [CS2103]]
        ```
        Expected Output deletes `CS1101` & `CS2103` tag for all contacts with the tag.
+
+<br>
+
+## Appendix: Effort
+
+Overall, our effort placed into the project as a group is relatively high. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
+
+While core functionality remains similar, we have made tweaks and added commands targeted at our users, NUS CS students.
+
+The following section details a person-by-person breakdown on key challenges we've faced and successes we've achieved.
+
+### Wen Cong
+
+### Arjun
+My key successes are in transforming how the users interface with DevBooks - making it completely keyboard-centric and (I'd like to think!) faster, with features such as autocomplete and command history.
+
+Some features were easier than expected - autocomplete was done by adding a trie with not many changes in flow.
+
+Other changes, like deletion confirmation state, required bigger changes that had to be done with best-practices kept in mind. These changes required deliberating over design choices, until settling on one that balances our requirements. I created UML diagrams to help support decisions when needed as well.
+
+Some of the difficulties I had faced includes adding TestFX to the testing suite. Updating the CI to work with TestFX involved hunting down many obscure error messages, until finding a solution that worked.
+
+LoCs added so far: 2953
+Estimated time spent: 60+ hours
+
+### Thaddaeus
+
+### Daohang
+
+### Derek
