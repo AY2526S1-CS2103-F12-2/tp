@@ -1,0 +1,141 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+skinparam ParticipantPadding 42
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":State" as State LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant "<<class>>\n:CommandRegistry" as CommandRegistry LOGIC_COLOR
+participant "f:CommandFactory" as CommandFactory LOGIC_COLOR
+participant ":PinCommandParser" as PinCommandParser LOGIC_COLOR
+participant "p:PinCommand" as PinCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant "personToPin:Person" as Person MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+participant ":Storage" as Storage STORAGE_COLOR
+end box
+
+[-> LogicManager : execute("pin 2")
+activate LogicManager
+
+LogicManager -> LogicManager : buildCommand("pin 2")
+activate LogicManager
+
+LogicManager -> State : isAwaitingUserConfirmation()
+activate State
+
+State --> LogicManager : false
+deactivate State
+
+LogicManager -> AddressBookParser : parseCommand("pin 2")
+activate AddressBookParser
+
+AddressBookParser -> CommandRegistry : getCommandFactory("pin")
+activate CommandRegistry
+
+CommandRegistry --> AddressBookParser : f
+deactivate CommandRegistry
+
+AddressBookParser -> CommandFactory : create(" 2")
+activate CommandFactory
+
+create PinCommandParser
+CommandFactory -> PinCommandParser
+activate PinCommandParser
+
+PinCommandParser --> CommandFactory
+deactivate PinCommandParser
+
+CommandFactory -> PinCommandParser : parse(" 2")
+activate PinCommandParser
+
+create PinCommand
+PinCommandParser -> PinCommand
+activate PinCommand
+
+PinCommand --> PinCommandParser
+deactivate PinCommand
+
+PinCommandParser --> CommandFactory : p
+deactivate PinCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+PinCommandParser -[hidden]-> AddressBookParser
+destroy PinCommandParser
+
+CommandFactory --> AddressBookParser : p
+deactivate CommandFactory
+
+AddressBookParser --> LogicManager : p
+deactivate AddressBookParser
+
+LogicManager --> LogicManager : p
+deactivate LogicManager
+
+LogicManager -> PinCommand : execute(model)
+activate PinCommand
+
+PinCommand -> Model : getSortedAndFilteredPersonList()
+activate Model
+
+Model --> PinCommand : lastShownList
+deactivate Model
+
+PinCommand -> Person : pin()
+activate Person
+
+Person --> PinCommand : pinnedPerson
+deactivate Person
+
+PinCommand -> Model : setPerson(personToPin, pinnedPerson)
+activate Model
+
+Model --> PinCommand
+deactivate Model
+
+PinCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+activate Model
+
+Model --> PinCommand
+deactivate Model
+
+create CommandResult
+PinCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> PinCommand
+deactivate CommandResult
+
+PinCommand --> LogicManager : r
+deactivate PinCommand
+
+LogicManager -> LogicManager : saveIfRequired(p)
+activate LogicManager
+
+LogicManager -> Storage : saveAddressBook(model.getAddressBook())
+activate Storage
+
+Storage --> LogicManager
+deactivate Storage
+
+LogicManager --> LogicManager
+deactivate LogicManager
+
+LogicManager -> LogicManager : saveCommandHistory("pin 2")
+activate LogicManager
+
+LogicManager --> LogicManager
+deactivate LogicManager
+
+[<-- LogicManager : r
+deactivate LogicManager
+destroy PinCommand
+@enduml
