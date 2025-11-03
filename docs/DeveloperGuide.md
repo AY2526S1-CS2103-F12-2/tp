@@ -1138,6 +1138,9 @@ Estimated time spent: 60+ hours
 ### Daohang
 My key successes were enhancing the help command while also implementing the new export feature. My key challenge faced was when creating the export feature, and figuring out the best way to route and design the control flow of the feature. This was eventually resolved through multiple stages of improving the implementation.
 
+LoCs added so far: 2958
+Estimated time spent: 50+ hours
+
 ### Derek
 My key successes are in improving the Find command, enabling search by name or tag with more accurate matching, and enhancing the Edit Preferred Mode of Communication, ensuring correct updates, validation, and clear UI highlighting.
 
