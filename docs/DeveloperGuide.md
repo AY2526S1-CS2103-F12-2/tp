@@ -465,7 +465,7 @@ browsers, users can instantly launch the appropriate communication channel direc
 
 3. **Launch UserGuide**: Press the **F1** key
    - DevBooks will attempt to launch a browser with the URL in the format formatted
-     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
+     `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of DevBook's user guide)
 
 - **Note**: Kindly check if the URL is correct when evaluating this feature
     ![result for `launch 1 -g`](images/alexYeohGitHub.png)
@@ -755,7 +755,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 1b. None of the specified tags can be found in any contact
 
-    * 1b1. DevbBoks shows an error message indicating that no tags were found for deletion
+    * 1b1. DevBooks shows an error message indicating that no tags were found for deletion
       Use case ends.
 
 * 1c. Some tags are found while others are not
@@ -1094,7 +1094,7 @@ testers are expected to do more *exploratory* testing.
    Expected Result: Error Message displaying that No Person is found using the target tag.
 
 3. Deleting Tags for all Users (Given the target tag **does exist**)
-   1. Prerequisites: The displayed list has at least 1 person with the target tags
+    1. Prerequisites: The displayed list has at least 1 person with the target tags
 
     2. Test: `tag -d t\CS1101 t\CS2103` <br>
     Expected Result Display:
