@@ -1105,7 +1105,7 @@ testers are expected to do more *exploratory* testing.
 
 <div style = "page-break-after:always;"></div>
 
-## Appendix: Effort
+## **Appendix: Effort**
 
 Overall, our effort placed into the project as a group is higher-than-average. As of the Feature Freeze, `DevBooks` is among the top 20 groups in terms of LoCs added.
 
