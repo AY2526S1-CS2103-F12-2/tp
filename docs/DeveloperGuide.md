@@ -16,8 +16,8 @@ Third party Libraries Used:
 * [Hamcrest](https://github.com/hamcrest/JavaHamcrest)
 * [Mockito](https://github.com/mockito/mockito)
 
-OpenAI’s ChatGPT (GPT-5) was used by [Derek Qua](https://github.com/Derekqua) to help refine code quality, 
-improve documentation clarity, and verify 
+OpenAI’s ChatGPT (GPT-5) was used by [Derek Qua](https://github.com/Derekqua) to help refine code quality,
+improve documentation clarity, and verify
 certain implementation details.
 All AI-generated suggestions were reviewed and adapted to ensure they align with the project’s requirements and coding standards.
 
@@ -219,7 +219,7 @@ This section describes some noteworthy details on how certain features are imple
 
 #### Overview
 The sort list feature is an enhancement to the original list feature. Through specifying a flag, the user can sort
-and display the entire list by either alphabetical or recent order. This feature improves the navigability of large 
+and display the entire list by either alphabetical or recent order. This feature improves the navigability of large
 address books by allowing users to quickly locate contacts in a preferred viewing order, without altering the underlying
 data structure or saved order of entries.
 
@@ -229,23 +229,23 @@ users with greater flexibility and control over how information is displayed. Us
 some may want to find contacts alphabetically for quick reference, while others may prefer viewing their most recently
 added or edited contacts first.
 
-This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting 
+This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting
 operation view-based rather than data-based, the system maintains data integrity while enhancing the user experience,
 efficiency, and readability of the contact list.
 
 #### Design Considerations
-- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts 
-  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves 
+- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts
+  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves
   consistency across sessions and ensures that subsequent commands (like edit, delete, etc.) continue to operate on the
   same underlying list indices.
 
 - **Extensibility for Future Sorting Criteria**: The design allows for future expansion of sorting options, such as
-  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable 
+  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable
   comparator-based utility, new sorting flags can be easily integrated without altering the command’s core structure.
 
 #### Implementation Details
-- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the 
-  corresponding sorting mode to the `ListCommand`. 
+- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the
+  corresponding sorting mode to the `ListCommand`.
 
 - **Using Sorted List**: The implementation leverages JavaFX’s `SortedList` to dynamically sort the existing observable
   list of contacts without modifying the underlying data. The appropriate `comparator` is selected based on the flag
@@ -260,7 +260,7 @@ efficiency, and readability of the contact list.
   - `list`
   - Will list the entire contact list from the first added person to last added person.
 
-- **User sorts entire list by Alphabetical Order**: 
+- **User sorts entire list by Alphabetical Order**:
   - `list -a`
   - Will list the entire contact list in alphabetical order.
 
@@ -417,12 +417,12 @@ browsers, users can instantly launch the appropriate communication channel direc
 
 - **Operating System Specific Commands**: As not all operating systems support Java's Desktop API library, when
   launching, the application will first attempt to use system specific commands to attempt to launch the specific
-  communication mode through the web browser. This ensures that, even when using a device without the support the 
+  communication mode through the web browser. This ensures that, even when using a device without the support the
   Java's Desktop API library, that users are still able to use this feature.
 
 - **Cross-Platform Compatibility**: Different platforms (Windows, macOS, Linux) may require distinct command syntaxes
-  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux 
-  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand 
+  or launch behaviors. For instance, `start` is used on Windows, `open` on macOS, and `xdg-open` on most Linux
+  distributions. The command selection logic abstracts these differences away, allowing a single unified LaunchCommand
   interface to function consistently across platforms.
 
 - **Fallback launch mechanism**: This ensures that if operating system–specific commands fail (for example, due to
@@ -437,19 +437,19 @@ browsers, users can instantly launch the appropriate communication channel direc
 
 #### Implementation Details
 
-- **Util Classes**: 
+- **Util Classes**:
   - `ApplicationLinkLauncher`: encapsulates all logic related to preparing the links such that it will be ready
     to be launched by the `DesktopApi` class.
   - `ApplicationLinkResult`: Stores the status and resulting message of the launched application. It will be used to
     inform the user of the success/failure of the operation.
   - `ApplicationType`: Enumeration of all the different types of application types that DevBooks can launch.
   - `DesktopApi`: Supports cross-platform Launching by first attempting to launch the using system specific commands,
-    before using Java's Desktop API as a fallback. This class is credited in the 
+    before using Java's Desktop API as a fallback. This class is credited in the
     [acknowledgement section](#acknowledgements) to the original creator of the code.
 
 - **GUI enabled ability to launch**:
-  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger 
-    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact 
+  - The GUI components (`PersonCard` & `MainWindow`) are integrated with clickable hyperlinks or buttons that trigger
+    the `LaunchCommand`. When the user interacts with these elements, the application retrieves the associated contact
     detail and calls the relevant `ApplicationLinkLauncher` method.
     ![UiLaunchTelegramSequenceDiagram](images/UiLaunchTelegramSequenceDiagram.png)
 
@@ -464,7 +464,7 @@ browsers, users can instantly launch the appropriate communication channel direc
      default GitHub page of the specified username)
 
 3. **Launch UserGuide**: Press the **F1** key
-   - Devbooks will attempt to launch a browser with the URL in the format formatted 
+   - Devbooks will attempt to launch a browser with the URL in the format formatted
      `https://ay2526s1-cs2103-f12-2.github.io/tp/UserGuide.html` (i.e. The web page of Devbook's user guide)
 
 - **Note**: Kindly check if the URL is correct when evaluating this feature
@@ -905,7 +905,7 @@ testers are expected to do more *exploratory* testing.
 
    3. Test case: `pin John`<br>
       Expected: The message "Invalid command format!" is shown to the user. Extra information on how to use pin is shown in the Result Display.
-   
+
    4. Test case: `pin 3` followed by `pin 1` to pin an already pinned contact <br>
       Expected: The message "Person is already pinned." is shown to the user.
 
