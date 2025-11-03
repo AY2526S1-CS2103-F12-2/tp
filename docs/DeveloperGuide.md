@@ -206,6 +206,52 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Sort List Feature
+
+#### Overview
+The sort list feature is an enhancement to the original list feature. Through specifying a flag, the user can sort
+and display the entire list by either alphabetical or recent order. This feature improves the navigability of large 
+address books by allowing users to quickly locate contacts in a preferred viewing order, without altering the underlying
+data structure or saved order of entries.
+
+#### Rationale
+As the original list feature only allowed listing of first to last added, the Sort List feature adds value by providing
+users with greater flexibility and control over how information is displayed. Users often have different priorities,
+some may want to find contacts alphabetically for quick reference, while others may prefer viewing their most recently
+added or edited contacts first.
+
+This feature addresses both needs without requiring separate commands or manual filtering. By keeping the sorting 
+operation view-based rather than data-based, the system maintains data integrity while enhancing the user experience,
+efficiency, and readability of the contact list.
+
+#### Design Considerations
+- **Not Updating the Underlying List**: The sorting operation is non-destructive. Hence, it only affects how contacts 
+  are displayed in the UI or output, not the actual order stored in the internal data structure. This preserves 
+  consistency across sessions and ensures that subsequent commands (like edit, delete, etc.) continue to operate on the
+  same underlying list indices.
+
+- **Extensibility for Future Sorting Criteria**: The design allows for future expansion of sorting options, such as
+  sorting by tag, company, or custom user-defined fields. By abstracting the sorting logic into a reusable 
+  comparator-based utility, new sorting flags can be easily integrated without altering the command’s core structure.
+
+#### Implementation Details
+- **Command Flag Parsing**: `ListCommandParser` detects optional flags (e.g., `-a`  or `-r`) and passes the 
+  corresponding sorting mode to the `ListCommand`. 
+
+- **Using Sorted List**: The implementation leverages JavaFX’s `SortedList` to dynamically sort the existing observable
+  list of contacts without modifying the underlying data. The appropriate `comparator` is selected based on the flag
+  specified by the user — for instance, comparing by `name` for alphabetical order or by inverse of the original list
+  for recency.
+
+- Separation of Concerns: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only 
+  specifies the desired mode. By doing so, it improves code maintainability and promotes single-responsibility principle.
+
+#### Example Scenarios
+- **User sorts entire list by Alphabetical order**: 
+  - `list -a`
+  - 
+- **User sorts entire
+
 ### Pin/unpin feature
 
 #### Overview
