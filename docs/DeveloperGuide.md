@@ -508,8 +508,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 1.  User inputs a help command to look up all commands available
 2.  Devbooks lists out all the commands with its uses
-3.  Devbooks prompts the user to select an available command for more details
-4.  User chooses specific help commands to look up details of one specific command.
+3.  User chooses specific help commands to look up details of one specific command.
 5.  Devbooks shows the specific instructions and guide on how to use that command
 
     Use case ends.
@@ -520,15 +519,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-* 4a. User inputs a commands that does not exist in list of commands
+* 3b. User inputs a commands that does not exist in list of commands
 
-    * 4a1. Devbooks shows an error message
-    * 4a2. Devbooks prompts user to select available command
-    * 4a3. User selects a command from list of available command
+    * 3b1. Devbooks shows an error message
+    * 3b2. Devbooks prompts user to select available command
+    * 3b3. User selects a command from list of available command
 
-  Steps 4a1–4a3 are repeated until available command is selected.
+  Steps 3b1–3b3 are repeated until available command is selected.
 
-  Use case resumes from step 5.
+  Use case resumes from step 4.
 
 
 **Use case: UC05 – Find Contact by Name or Tag**
