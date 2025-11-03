@@ -90,10 +90,6 @@ public class DesktopApi {
         if (!isSuccess) {
             isSuccess = browseDesktop(uri);
         }
-//
-//        if (browseDesktop(uri)) {
-//            return true;
-//        }
 
         return isSuccess;
     }
