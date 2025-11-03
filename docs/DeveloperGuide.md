@@ -243,7 +243,7 @@ efficiency, and readability of the contact list.
   specified by the user — for instance, comparing by `name` for alphabetical order or by inverse of the original list
   for recency.
 
-- Separation of Concerns: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only 
+- Separation of Concerns: Sorting logic is encapsulated within the `Model` layer ensuring that the command itself only
   specifies the desired mode. By doing so, it improves code maintainability and promotes single-responsibility principle.
 
 #### Example Scenarios
