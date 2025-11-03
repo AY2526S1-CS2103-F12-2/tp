@@ -312,6 +312,32 @@ Other notes:
 Note that another call to the `Autocompletor` is **not** made, to prevent situations where the autocompleted text does not match with the hint that is shown to the user.
 * The Trie is adapted from [Princeton's TrieST](https://algs4.cs.princeton.edu/52trie/) implementation, and contains a subset of features. For more information on how Tries work, [see here](https://en.wikipedia.org/wiki/Trie).
 
+### Command History
+
+#### Overview
+
+Similar to autocomplete, the command history feature intends to speed up the use of Devbooks. It allows users to
+access the 15 latest successful commands that they have inputted by using the arrow keys.
+
+#### Design Considerations
+- **Familiarity**: Arrow keys are a common way to access command history in CLIs.
+- **User Experience**: Only saves successful commands to prevent filling history with irrelevant data.<br>
+Devbooks leaves inputs as-is on failed commands. This allows users to edit their input, preventing the need for saving failed commands.
+
+#### Implementation Details
+
+![Interactions between UI and CommandHistory](images/CommandHistorySequenceDiagram.png)
+
+The general flow of saving and using command history is shown above.
+
+Other notes:
+* The `ReadOnlyCommandHistory` is exposed to logic via the `ModelManager`. However, the UI holds a direct reference to `ReadOnlyCommandHistory`.<br>
+This was done so as to maintain the low level of coupling that UI has to other components. In the event that UI becomes more dependent on model, consider passing the ModelManager to UI and using the manager to interface with the model.
+* `ReadOnlyCommandHistory` is passed into the UI manager via the constructor called in `MainApp.java`, similar to how the other architecture component managers are passed. This allows the UI to maintain a safe, updated, read-only view of the CommandHistory.
+* Obtaining the previous command in the history requires a string parameter, the current text in the command box. This is so that the command being typed by the user can be re-attained by scrolling back down, like in other CLIs.
+* The `CommandHistory` is saved to disk in a newline-delimited manner. This is a simple format that is easy to encode and decode. It fits our requirements, since commands are strictly one line only.
+
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**

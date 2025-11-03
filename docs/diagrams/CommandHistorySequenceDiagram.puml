@@ -1,0 +1,77 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+Actor User as user USER_COLOR
+Participant ":UI" as ui UI_COLOR
+
+
+box Logic LOGIC_COLOR_T1
+Participant ":LogicManager" as logic LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+Participant ":ModelManager" as model MODEL_COLOR
+Participant "hist:ReadOnlyCommandHistory" as roch MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+Participant ":StorageManager" as storage STORAGE_COLOR
+Participant ":NewlineDelimitedCommandHistoryStorage" as ndchs STORAGE_COLOR
+end box
+
+user -[USER_COLOR]> ui : "tag 1 t\\newtag"
+activate ui UI_COLOR
+
+ui -> logic: execute("tag 1 t\\newtag")
+activate logic LOGIC_COLOR
+
+ref over logic: parseAndExecuteCommand
+logic -> model: addCommandToHistory("tag")
+activate model MODEL_COLOR
+
+'// add note here
+
+model --> logic
+deactivate model
+
+logic -> model: getCommandHistory()
+activate model MODEL_COLOR
+
+model --> logic: hist
+deactivate model
+
+logic -> storage: saveCommandHistory(hist)
+activate storage STORAGE_COLOR
+
+storage -> ndchs: saveCommandHistory(hist)
+activate ndchs STORAGE_COLOR
+ref over ndchs: saveCommandHistory
+ndchs --> storage
+deactivate ndchs
+
+storage --> logic
+deactivate storage
+
+logic --> ui
+deactivate logic
+
+ui --> user
+deactivate ui
+
+user -> ui: <ARROW_KEY_UP>
+activate ui UI_COLOR
+
+ui -> roch: getPreviousCommandFromHistory(currCommandBoxText)
+activate roch MODEL_COLOR
+
+roch --> ui: "tag 1 t\\newtag"
+deactivate roch
+
+
+ui -> ui : setCommandBoxText("tag..")
+
+ui --> user
+deactivate ui
+
+@enduml
