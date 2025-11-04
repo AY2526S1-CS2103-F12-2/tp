@@ -23,7 +23,10 @@ end box
 [-> LogicManager : execute("pin 2")
 activate LogicManager
 
-ref over LogicManager: parsePinCommand
+ref over LogicManager, PinCommand: parsePinCommand
+
+create PinCommand
+LogicManager[hidden]-> PinCommand
 
 LogicManager -> PinCommand : execute(model)
 activate PinCommand
