@@ -39,8 +39,6 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 6. Refer to the [Features](#features) below for details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
-<div style = "page-break-after:always;"></div>
-
 ## Features
 
 <div markdown="block" class="alert alert-info">
@@ -64,8 +62,6 @@ DevBooks is a **desktop app for managing contacts, optimized for use via a Comma
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
-
-<div style = "page-break-after:always;"></div>
 
 ### Viewing help : `help`
 
@@ -134,8 +130,6 @@ Examples:
 * `list -a` shows all persons in alphabetical order by name.
 * `list -r` shows all persons in the reverse order they were added.
 * `list -a -r` error message is displayed.
-
-<div style = "page-break-after:always;"></div>
 
 ### Editing a person : `edit`
 
