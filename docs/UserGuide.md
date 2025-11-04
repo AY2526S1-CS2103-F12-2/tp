@@ -189,8 +189,6 @@ Examples:
     Oliveiro`, `David Li`<br>
     ![result for 'find n\charlotte david'](images/findCharlotteDavidResult.png)
 
-<div style = "page-break-after:always;"></div>
-
 ### Deleting a person : `delete`
 
 Deletes the specified person from the address book. Command requires follow-up confirmation.
@@ -376,13 +374,13 @@ Press the `Up` arrow key to cycle backwards through your command history.
 
 Press the `Down` arrow key to cycle forwards through your command history.
 
-<div style = "page-break-after:always;"></div>
-
 ### Autocomplete
 
 As you type commands in the Command Box, autocomplete suggestions may be shown. To accept the autocomplete text, press `<Tab>`.
 
 Autocomplete suggestions are shown in-place and in grey.
+
+<div style = "page-break-after:always;"></div>
 
 ### Updating Tags for Multiple Contacts
 
