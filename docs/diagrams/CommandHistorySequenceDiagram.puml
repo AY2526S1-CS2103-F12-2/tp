@@ -18,7 +18,6 @@ end box
 
 box Storage STORAGE_COLOR_T1
 Participant ":StorageManager" as storage STORAGE_COLOR
-Participant ":NewlineDelimitedCommandHistoryStorage" as ndchs STORAGE_COLOR
 end box
 
 user -[USER_COLOR]> ui : "tag 1 t\\newtag"
@@ -51,11 +50,7 @@ deactivate model
 logic -> storage: saveCommandHistory(hist)
 activate storage STORAGE_COLOR
 
-storage -> ndchs: saveCommandHistory(hist)
-activate ndchs STORAGE_COLOR
-ref over ndchs: saveCommandHistory
-ndchs --> storage
-deactivate ndchs
+ref over storage: saveCommandHistory
 
 storage --> logic
 deactivate storage
